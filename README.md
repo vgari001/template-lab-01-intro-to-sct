@@ -126,6 +126,12 @@ alias la="ls -al"
 
 Save and exit the file, then run `source .bashrc`. Now when you can use `la`! Notice that this alias doesn't replace `ls -al`; you can still use the original form if you so choose.
 
+For students with Linux and macOS machines: try making an alias in your local machine's `bashrc` file for logging into hammer. Something like this will work:
+
+```
+alias hammer="ssh <your_CS_username>@hammer.cs.ucr.edu"
+```
+
 ### Extra Stuff
 
 Note from Andrew: Not sure where to put the following note just yet. Maybe near the end of the lab?
