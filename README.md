@@ -1,12 +1,12 @@
 # Intro to Linux
 
-Welcome to CS 100! For the first lab of the course, we are introducing the basics needed to get around the Linux environment. There are many reasons Linux is still used in industry today, ranging from its open-source nature to its robustness in portability. There are various distributions that build on top of the Linux kernel (i.e. Ubuntu, Red Hat, CentOS, etc...). In this course, we will be logging into and using a server called Hammer. We are also introducing CMake, Git and GitHub in this lab.
+Welcome to CS 100! For the first lab of the course, we are introducing the basics needed to get around the Linux environment. There are many reasons Linux is still used in industry today, ranging from its open-source nature to its excellent stability. There are various verisions of Unix/Linux, known as distributions, which are built from a relatively small number of base kernels. In this course, we will be logging into and using a server provided by the university named `hammer`. In addition to learning Linux basics we will also (re-)introducing g++, CMake, Git and GitHub in this lab.
 
 > Note: any text surrounded by angle brackets `< >` represent a portion of text that is specific to you and needs to be replaced. Make sure you replace that portion with what is requested in the lab description.
 
 ## SSH into Hammer 
 
-You will need to log into the Hammer server using [Secure Shell (SSH)](https://www.ssh.com/ssh/protocol). 
+You will need to log into the Hammer server using a [Secure Shell (SSH)](https://www.ssh.com/ssh/protocol) application.
 
 If you are using a Linux or Mac computer, you can run the following command in the terminal:
 
@@ -16,11 +16,41 @@ ssh <your_CS_username>@hammer.cs.ucr.edu
 
 If you are using a Windows computer, you will first need to install a program called PuTTY, which can be installed from [putty.org](http://www.putty.org/). When you open PuTTY, there will be a box for a “Host Name”, where you will input `<your_CS_username>@hammer.cs.ucr.edu`.
 
+> For both of the above commands you should replace <your_CS_username> with the username provided to you by the CS department. If you do not yet have a CS account ask your TA to help you register a new account (some students will need to go through CS systems to get an account, your TA will advise you if this is the case).
+
 You may be asked to exchange keys with the server (which you should allow). Next, you will be prompted for your password. You should note that when typing your password, no characters will be displayed even though you are still typing (this is a security measure).
 
 ## Basics with the Linux Environments
 
 Let's go over some basic commands that will help you manipulate and traverse the Linux system.
+
+### The File System
+
+The Linux file system is similar to most other file systems. It is helpful to envision a file system like a tree. You have a root directory (node), denoted by simply `/` in linux and mac and typically `C:\` in windows, which has many children that are directories that all live in the root directory. Each of those directories can then holder other directores, which can hold other directories, etc. with as many levels as the user would like.
+
+When you logged into Hammer, you should've been placed into your user root directory (also called your home directory). To verify this, please type `pwd`, the command to "print working directory" or the current directory you are in. You should see the path `/home/csmajs/<your_CS_username>` (where `<your_CS_username>` is your CS username from before). If your path is not similar, type `cd ~` where the `~` character is a special character reserved by your terminal to represent your personal home directory. `cd` is the command used to "change directories" and expects a relative or absolute path as an argument (we will explain the difference between paths shortly).
+
+One important thing to note at this point is that you are working on a server which can, and likely currently does, have multiple user connected to it at the same time. You can type the command `who` to see "who" is currently logged into the server. Each of these users has their own username, directories, processes, and resources on the server. This means that each user has a different `~` home directory that typing `cd ~` will take them to. This is an important concept to remember in order to develop programs which are portable and will work across users, but more on that later.
+
+Go ahead and type the following command:
+
+```
+mkdir example_dir
+```
+
+This will create a new directory in your current directory, which if you ran the last command should be your home directory. To change into the new directory type `cd example_dir`. Then type `pwd` and you should see your path updated to something like `/home/csmajs/<your_CS_username>/example_dir`. To go back to the directory above, which should be your home direcotry, type `cd ..`. The two dots `..` represent a reserved direcotry that denotes the directory above your current directory, known as the parent. There is another reserved single dot directory `.` which represnts the current working directory and we'll cover its usage later in this lab. Reserved directories like these make it easy to move up and down the directory structure in a relative manner without having to type the full path to the directory each time.
+
+Now, type the following command:
+
+```
+cd /home/csmajs/<your_CS_username>/example_dir
+```
+
+Notice that you are in the same directory as before. The only difference was which type of path you passed in. In this case, `cd example_dir` is your relative path, since you are changing directories *relative to* your current directory. `cd /home/csmajs/<your_CS_username>/example_dir` is your absolute path, since you started your path name with the root directory `/`.
+
+> Note: Your user root (home) directory is different from the server's/system's root directory. Your home directory is located in a special directory specifically made for CS majors (there is also a directory for faculty and grad students). The system's root directory, as described earlier, is the topmost directory of the whole server.
+
+Go back to your home directory (`cd ~`). Another useful command is `ls`, which lists contents inside a directory. Go ahead and type that command now. You should see `example.txt` and `example_dir` as the only entries. Now type `ls -a`. You should now see a lot files preceded with the `.` character. These are hidden files that are used by the system for configurations. Now try `ls -al`. This gives you all the files (alongside the hidden files) in a format that shows user permissions and privileges for accessing content, as well as the date the file was created/modified. Out of all the contents, notice `.bashrc`. We will be editing this in the next section.
 
 ### Creating Files
 
@@ -57,34 +87,6 @@ cat <first file> <second file> <third file> ... <nth file>
 Other ways to create files would be by using `touch` (`touch <file name>`) or by opening a new file in a text editor like Vim (`vim <file name>`) and saving it (we will talk about Vim later in this lab).
 
 This is a good time to clear your terminal screen. To do so, simply type and enter `clear`.
-
-### The File System
-
-The Linux file system is similar to the macOS file system. It is helpful to envision a file system like a tree. You have a root node (root directory, denoted by `/`) that have many children (multiple directories that all live in the root directory), and so forth and so on. For Windows, `C:\` would be the root directory.
-
-When you logged into Hammer, you should've been placed into your user root directory (also called your home directory). To verify this, please type `pwd` (command for printing the current directory you are in). You should see the path `/home/csmajs/<your_CS_username>`. If your path is not similar, type `cd ~` (the `~` character is a special character that denotes your home directory).
-
-`cd` is the command used to change directories. It expects a relative or absolute path as an argument (we will explain the difference between paths shortly).
-
-Go ahead and type the following command:
-
-```
-mkdir example_dir
-```
-
-This will create a directory in your home directory. To go into it, type `cd example_dir`. Now type `pwd`. You should see your path updated to something like `/home/csmajs/<your_CS_username>/example_dir`. To go back to the parent directory, type `cd ..`. Those two dots make up a special keyword that denotes the parent directory, so you don't have to type the full path out every time.
-
-Now, type the following command:
-
-```
-cd /home/csmajs/<your_CS_username>/example_dir
-```
-
-Notice that you are in the same directory as before. The only difference was which type of path you passed in. In this case, `cd example_dir` is your relative path, since you are changing directories *relative to* your current directory. `cd /home/csmajs/<your_CS_username>/example_dir` is your absolute path, since you started your path name with the root directory `/`.
-
-> Note: Your user root (home) directory is different from the server's/system's root directory. Your home directory is located in a special directory specifically made for CS majors (there is also a directory for faculty and grad students). The system's root directory, as described earlier, is the topmost directory of the whole server.
-
-Go back to your home directory (`cd ~`). Another useful command is `ls`, which lists contents inside a directory. Go ahead and type that command now. You should see `example.txt` and `example_dir` as the only entries. Now type `ls -a`. You should now see a lot files preceded with the `.` character. These are hidden files that are used by the system for configurations. Now try `ls -al`. This gives you all the files (alongside the hidden files) in a format that shows user permissions and privileges for accessing content, as well as the date the file was created/modified. Out of all the contents, notice `.bashrc`. We will be editing this in the next section.
 
 ### The `bashrc` File
 
