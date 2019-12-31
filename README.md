@@ -78,7 +78,7 @@ Now, type the following command:
 cd /home/csmajs/<your_CS_username>/example_dir
 ```
 
-Notice that you are in the same directory as before. The only difference was which type of path you passed in. In this case, `cd example_dir` in your relative path, since you are changing directories *relative to* your current directory. `cd /home/csmajs/<your_CS_username>/example_dir` is your absolute path, since you started your path name with the root directory `/`.
+Notice that you are in the same directory as before. The only difference was which type of path you passed in. In this case, `cd example_dir` is your relative path, since you are changing directories *relative to* your current directory. `cd /home/csmajs/<your_CS_username>/example_dir` is your absolute path, since you started your path name with the root directory `/`.
 
 > Note: Your user root (home) directory is different from the server's/system's root directory. Your home directory is located in a special directory specifically made for CS majors (there is also a directory for faculty and grad students). The system's root directory, as described earlier, is the topmost directory of the whole server.
 
