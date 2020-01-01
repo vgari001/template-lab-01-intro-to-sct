@@ -20,11 +20,7 @@ If you are using a Windows computer, you will first need to install a program ca
 
 You may be asked to exchange keys with the server (which you should allow). Next, you will be prompted for your password. You should note that when typing your password, no characters will be displayed even though you are still typing (this is a security measure).
 
-## Basics with the Linux Environments
-
-Let's go over some basic commands that will help you manipulate and traverse the Linux system.
-
-### The File System
+## The Linux File System
 
 The Linux file system is similar to most other file systems. It is helpful to envision a file system like a tree. You have a root directory (node), denoted simply by `/` in Linux and Mac and typically `C:\` in windows, which has many children that are directories that all live in the root directory. Each of those directories can then hold other directores, which can hold other directories, etc. with as many levels as the user would like.
 
@@ -52,7 +48,7 @@ Notice that you are in the same directory as before (you can verify by running `
 
 Go back to your home directory (`cd ~`) and type the command `ls` which lists the contents of a directory. You should see the directory `example_dir` we created before as the only entry. Now type `ls -a` and you should see additional "hidden" files which start with a dot (`.`). Any file (even ones you create) that start with a dot are considered hidden files by the system and won't be shown with a normal `ls` command. These files are typically system or configuration files which are used by various systems, such as version control or build systems, or Linux itself, such as `.` and `..`. 
 
-### The `bashrc` File
+## The `bashrc` File
 
 Another example of a hidden file used by a system is the `.bashrc` file, which you should see when running `ls -a` from your home directory (`~`). The `bashrc` file is a config file that is executed every time your terminal loads such as when you login to `hammer` over SSH. Go ahead and type `cat ~/.bashrc` to view its contents. You should see something like below:
 
@@ -84,7 +80,7 @@ This will allow you to use a newer version of Git that is compatible with GitHub
 
 We will be using Vim here to add the necessary code to the `.bashrc` file. Make sure you are in your home directory and type `vim .bashrc` to open the `.bashrc` file for editing in Vim. Vim is designed to allow programmers to work quickly, so it tries to keep you hands on the home row of the keyboard as much as possible. It uses the `j` key to move down, the `k` key to move up, the `l` key to move right, and the `h` key to move left. Move down to the line that has `# User specific aliases and functions` using these keys. Next, hit `Shift-A`. This will move your cursor to the end of the line and put you in Insert mode. Vim has multiple modes, the major ones of which are normal mode which takes key commands as as `hjkl` to move or `Shift-A`, and insertion mode, which allows you to type text like you would in a word document (there is also a visual mode which is very useful, but we won't cover it here). You can tell if you are in insert mode by the **-- INSERT --** at the bottom of your window and can use the Esc key to go back to normal mode. 
 
-Go ahead and press Enter while in Insert mode to go to (and create) the next line. Type in `source /opt/rh/devtoolset-6/enable`, then hit the Esc key to go back to normal mode. Type `:` to enter a command sequence followed by `wq` which represent writing the file (`w`) and quiting the program (`q`) and hit Enter. The `:` puts you in command mode which is very powerful in Vim and will let you do everything from [replace all behavior]() to [running bash commands without exiting Vim](). Congrats! You have added your first user-specific command into `.bashrc`. Now, run `source .bashrc` to make sure the new devtools are loaded (you need to do this to reload the file, otherwise you would need to quit `hammer` and log back in for the `.bashrc` file to load).
+Go ahead and press Enter while in Insert mode to go to (and create) the next line. Type in `source /opt/rh/devtoolset-6/enable`, then hit the Esc key to go back to normal mode. Type `:` to enter a command sequence followed by `wq` which represent writing the file (`w`) and quiting the program (`q`) and hit Enter. The `:` puts you in command mode which is very powerful in Vim and will let you do everything from [replace all behavior](https://www.linux.com/tutorials/vim-tips-basics-search-and-replace/) to [running bash commands without exiting Vim](https://www.linux.com/tutorials/vim-tips-working-external-commands/). Congrats! You have added your first user-specific command into `.bashrc`. Now, run `source .bashrc` to make sure the new devtools are loaded (you need to do this to reload the file, otherwise you would need to quit `hammer` and log back in for the `.bashrc` file to load).
 
 Another useful tool is aliasing. Aliasing works well when you have a complicated and/or elongated command to type in that you can shorten to something more recognizable. Think of passing a really long URL through [bit.ly](https://bitly.com). Let's look at a way to use aliasing.
 
@@ -101,6 +97,30 @@ For students with Linux and macOS machines: try making an alias in your local ma
 ```
 alias hammer="ssh <your_CS_username>@hammer.cs.ucr.edu"
 ```
+
+## Using `g++` for Compilation
+
+Using `g++` invokes GNU's C++ compiler. To demonstrate how it works, go ahead and write a simple `hello world!` program using the command line editor of your choice (save the file as `main.cpp`):
+
+```
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	cout << "hello world!" << endl;
+	return 0;
+}
+```
+
+Once written, make sure to save and quit out of your editor. Then, type the following command:
+
+```
+g++ <filename>
+```
+
+If successful, there shouldn't be any output. A quick `ls` will show that a new file named `a.out` was generated. This is the executable file of your program. To run it, type `./a.out` and press Enter. You should now see `hello world!` as output.
 
 ### Extra Stuff
 
