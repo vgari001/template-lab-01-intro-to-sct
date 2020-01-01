@@ -127,12 +127,80 @@ int main()
 Once written, make sure to save and quit out of your editor. Then, type the following command:
 
 ```
-g++ main.cpp
+g++ -std=c++11 main.cpp
 ```
 
 If successful, there shouldn't be any output. A quick `ls` will show that a new file named `a.out` was generated. This is the executable target file of your program. To run it, type `./a.out` and press Enter. You should now see `hello world!` as output.
 
-Most of the time, you would want to give your program a recognizable name. To do that, we can use the `-o` flag to name our executable target file. Go ahead and type `rm a.out`.
+> Note: The above command will work by just typing `g++ main.cpp`. The flag `-std=c++11` is added to tell the compiler to use an updated standard of C++. Please use that flag when compiling programs within this course.
+
+Most of the time, you would want to give your program a recognizable name. To do that, we can use the `-o` flag to name our executable target file. Go ahead and type `rm a.out` to delete the executable. Then, type the following command:
+
+```
+g++ -std=c++11 -o my_program main.cpp
+```
+
+You have now created an executable called `my_program`. You can run it by typing `./my_program`.
+
+When developing larger programs in object-oriented languages, it is common to break up work into multiple source and header files (in C++'s case, `.cpp` and `.h` files respectively). We will now show how `g++` can be used to compile multiple files into a single executable.
+
+We will creating a simple Rectangle class to show this. Go ahead and make a header file called `rectangle.h`, and add the following code:
+
+```
+#ifndef RECTANGLE_H
+#define RECTANGLE_H
+
+class Rectangle {
+	public:
+		void set_values(int w, int h);
+		int area();
+	private:
+		int _width;
+		int _height;
+};
+
+#endif /* RECTANGLE_H */
+```
+
+Save and quit. Now, create a class (source) file called `rectangle.cpp`, and add the following code:
+
+```
+#include "rectangle.h"
+
+void Rectangle::set_values(int w, int h) {
+	_width = w;
+	_height = h;
+}
+
+int Rectangle::area() {
+	return _width * _height;
+}
+```
+
+Save and quit. Finally, overwrite your current `main.cpp` with following code:
+
+```
+#include <iostream>
+#include "rectangle.h"
+
+using namespace std;
+
+int main()
+{
+	Rectangle rect;
+	rect.set_values(3,4);
+	cout << "area: " << rect.area() << endl;
+	return 0;
+}
+```
+
+We are now ready to compile and run! Go ahead and run the following command:
+
+```
+g++ -std=c++11 -o my_cooler_program main.cpp rectangle.cpp
+```
+
+Notice that we didn't include the header file `rectangle.h` as an argument. That is where the `#include "rectangle.h"` within `rectangle.cpp` comes in handy; it tells the compiler to include the header for us. Nice! Go ahead and run `./my_cooler_program`. You should see `area: 12` as output.
 
 ### Extra Stuff
 
