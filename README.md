@@ -1,5 +1,7 @@
 # Intro to Linux
 
+> Author(s): Andrew Lvovsky (@borninla) and Brian Crites (@brrcrites)
+
 Welcome to CS 100! For the first lab of the course, we are introducing the basics needed to get around the Linux environment. There are many reasons Linux is still used in industry today, ranging from its open-source nature to its excellent stability. There are various versions of Unix/Linux, known as distributions, which are built from a relatively small number of base kernels. In this course, we will be logging into and using a server provided by the university named `hammer`. In addition to learning Linux basics we will also (re-)introducing g++, CMake, Git and GitHub in this lab.
 
 > Note: any text surrounded by angle brackets `< >` represent a portion of text that is specific to you and needs to be replaced. Make sure you replace that portion with what is requested in the lab description.
@@ -47,6 +49,14 @@ Notice that you are in the same directory as before (you can verify by running `
 > Note: Your user root (home) directory is different from the server's root directory. Your home directory is attached to your account and resides as a directory specifically created to hold your files (directories like these are automatically created when new users are added). The system's root directory is the highest (or lowest depending on your view) path on the server and has no parent directory (if you `cd ..` from `/` it will send you back to `/`).
 
 Go back to your home directory (`cd ~`) and type the command `ls` which lists the contents of a directory. You should see the directory `example_dir` we created before as the only entry. Now type `ls -a` and you should see additional "hidden" files which start with a dot (`.`). Any file (even ones you create) that start with a dot are considered hidden files by the system and won't be shown with a normal `ls` command. These files are typically system or configuration files which are used by various systems, such as version control or build systems, or Linux itself, such as `.` and `..`. 
+
+Now that we've demonstrated how to create and traverse directories, let's go ahead and delete `example_dir`. Make sure you are in your home directory, then type:
+
+```
+rm -rf example_dir
+```
+
+`rm` is the command used to "remove" files or directories. Normally, if you have a file, you can just enter `rm <filename>`. Since we are dealing with a directory, we need to add the extra `-rf` option flags. `r` recursively removes files and directories relative to the directory you are removing, while 'f' ignores nonexistent files and doesn't prompt the user to delete every file within the directory that needs to be deleted. That said, with great power comes great responsibility. Use `rm -rf` only when needed. The last thing you want is to accidently delete important files or directories.
 
 ## The `bashrc` File
 
@@ -117,10 +127,12 @@ int main()
 Once written, make sure to save and quit out of your editor. Then, type the following command:
 
 ```
-g++ <filename>
+g++ main.cpp
 ```
 
-If successful, there shouldn't be any output. A quick `ls` will show that a new file named `a.out` was generated. This is the executable file of your program. To run it, type `./a.out` and press Enter. You should now see `hello world!` as output.
+If successful, there shouldn't be any output. A quick `ls` will show that a new file named `a.out` was generated. This is the executable target file of your program. To run it, type `./a.out` and press Enter. You should now see `hello world!` as output.
+
+Most of the time, you would want to give your program a recognizable name. To do that, we can use the `-o` flag to name our executable target file. Go ahead and type `rm a.out`.
 
 ### Extra Stuff
 
