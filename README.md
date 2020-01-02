@@ -199,7 +199,7 @@ int main()
 {
 	Rectangle rect;
 	rect.set_width(3);
-    	rect.set_height(4);
+    rect.set_height(4);
 	cout << "Rectangle area: " << rect.area() << endl;
 	return 0;
 }
@@ -217,7 +217,7 @@ Notice that we didn't include the header file `rectangle.hpp` as an argument. Th
 
 ### Make
 
-Now we briefly introduce Make, GNU's build automation tool. It automatically builds executables from source code by reading a file called the `Makefile` which tells Make how to build the target program. The `Makefile` is made up of rules, that look like the following:
+Now we briefly introduce Make which is a GNU project build automation tool. Make is essentially a scripting language for building executables from source code. It works by reading a `Makefile` (that is the required file name) which is a text file that tells Make how to build the target program. The `Makefile` is made up of rules, that look like the following:
 
 ```make
 target:	dependencies ...
@@ -232,11 +232,11 @@ area_calculator: src/main.cpp src/rectangle.cpp
 	g++ -o area_calculator src/main.cpp src/rectangle.cpp
 ```
 
-Save and quit. Now, go ahead and run `make`. You should see the rule's command displayed as output. By this point, you hopefully see the potential in using `make`; you don't need to keep entering `g++ -o area_calculator main.cpp rectangle.cpp` over and over again when making edits to the source files.
+Now go ahead and run `make` in your terminal and you should see the rule's command displayed as output. Using `make` allows you to save lots of time typing out compilations commands so you don't need to keep entering `g++ -o area_calculator main.cpp rectangle.cpp` over and over again when making edits to the source files. It also allows you to create multiple executables from a single command. However, we won't be using make directly in this course but instead a more powerful system.
 
 ### CMake
 
-[CMake](https://cmake.org/) is a build system built on top of GNU's `make` and supports some more advanced features. The CMake system looks for a CMakeLists.txt file in order to know what to build, so start by creating the following CMakeLists.txt file:
+[CMake](https://cmake.org/) is a build system built on top of GNU's `make` and supports some more advanced features. The CMake system looks for a `CMakeLists.txt` file (again this is the required file name) in order to know what to build. Start by creating the following `CMakeLists.txt` file:
 
 ```cmake
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
@@ -253,7 +253,7 @@ The first function, `CMAKE_MINIMUM_REQUIRED`, sets the minimum version of CMake 
 $ cmake3 .
 ```
 
-This command envokes the CMake build system in the local directory (where our CMakeLists.txt file is located). **Make sure you use the `cmake3` command and not just `cmake`**. Hammer has two version of CMake installed, and if you do not use the `cmake3` command you will get an error (note that you will likely just use the `cmake` command when you develop on your local environment, since you will only have one version of CMake installed). You should now have an updated `Makefile` that matches the executable that we asked for in our CMakeLists.txt. Go ahead and envoke the `Makefile` (type `make`). You should see a nicely designed build percentage which will generate a new `area_calculator` executable.
+This command envokes the CMake build system in the local directory (where our CMakeLists.txt file is located). **Make sure you use the `cmake3` command and not just `cmake`**. Hammer has two version of CMake installed because of the tool sourcing we did at the beginning of the lab, and if you do not use the `cmake3` command you will get an error. If you are developing on your own machine will likely just use the `cmake` command, since you will only have one version of CMake installed. CMake should now have generated a new `Makefile` so execute the `Makefile` with the `make` command. You should see a nicely designed build percentage which will generate a new `area_calculator` executable.
 
 ```sh
 $ make
@@ -263,6 +263,35 @@ Scanning dependencies of target area_calculator
 [100%] Linking CXX executable area_calculator
 [100%] Built target area_calculator
 ```
+
+As you may have guessed CMake and Make both allow you to generate multiple executables. In this class we will use this functionality to build executables for the regular program and for testing. Lets try creating another executable by creating another main which runs a slightly different program. Create a file with the following code named `new_main.cpp` in the `src` directory:
+
+```c++
+#include <iostream>
+#include "../header/rectangle.hpp"
+
+using namespace std;
+
+int main()
+{
+	Rectangle rect;
+	rect.set_width(15);
+    rect.set_height(30);
+	cout << "Rectangle area: " << rect.area() << endl;
+	return 0;
+}
+```
+
+Now add the following snippet of code to the `CMakeLists.txt` file you created previously:
+
+```cmake
+ADD_EXECUTABLE(bigger_area_calculator
+    src/new_main.cpp
+    src/rectangle.cpp
+)
+```
+
+Now if you run `cmake3 .` and `make` you will see two executables generated `area_calculator` and `bigger_area_calculator`. If you want to only build one of the executables (for example if you updated only one of the mains) then you can invoke `make` with the name of the executable you want it to build, `make area_calculator` for example, and it will only build that one executable.
 
 ## Intro to Git and Github
 
@@ -457,14 +486,14 @@ Every time you modify a file, you must explicitly tell Git to add the file again
 
 Run `git status` to see the files that are currently being tracked. We can add the changes to the `main.cpp` file, and verify it is added, with:
 
-```
+```sh
 $ git add main.cpp
 $ git status
 ```
 
 We can then commit the changes using:
 
-```
+```sh
 $ git commit -m "Add one more rectangle and compute its area”
 ```
 
@@ -474,19 +503,19 @@ While git is a VCS, GitHub is a remote repository, which is an important distinc
 
 Since we cloned the remote repository from GitHub directly, our local repository is already associated with a remote repository (usually referred to as “remote” or “upstream”). In order to send the changes we’ve made locally to GitHub, we just need to “push” them up to the server (do this now).
 
-```
+```sh
 $ git push
 ```
 
 This will push all the commits you've made since your most recent push. If there haven’t been any other changes to the remote GitHub version, then this will simply send the commits to the repo. However, if there have been changes to the branch (perhaps because someone else has also been working on that same branch or changes have been merged into master), then you will first need to “pull” the remote changes, merge them with your work, and then push the merged version to GitHub:
 
-```
+```sh
 $ git pull
 ```
 
 It is also possible to receive the remote changes (also known as upstream changes) without having Git automatically attempt to merge them into your branch. For this you would use the following command:
 
-```
+```sh
 $ git fetch
 ```
 
