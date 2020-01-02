@@ -170,7 +170,7 @@ class Rectangle {
 Also create a source file called `rectangle.cpp` in the `src` directory, and add the following code:
 
 ```c++
-#include "rectangle.hpp"
+#include "../header/rectangle.hpp"
 
 void Rectangle::set_width(int w) {
 	this->width = w;
@@ -189,7 +189,7 @@ Finally, overwrite your current `main.cpp` with following code:
 
 ```c++
 #include <iostream>
-#include "rectangle.hpp"
+#include "../header/rectangle.hpp"
 
 using namespace std;
 
@@ -240,8 +240,8 @@ Save and quit. Now, go ahead and run `make`. You should see the rule's command d
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 ADD_EXECUTABLE(area_calculator
-    main.cpp
-    rectangle.cpp
+    src/main.cpp
+    src/rectangle.cpp
 )
 ```
 
@@ -256,8 +256,8 @@ This command envokes the CMake build system in the local directory (where our CM
 ```sh
 $ make
 Scanning dependencies of target area_calculator
-[ 33%] Building CXX object CMakeFiles/area_calculator.dir/main.cpp.o
-[ 66%] Building CXX object CMakeFiles/area_calculator.dir/rectangle.cpp.o
+[ 33%] Building CXX object CMakeFiles/area_calculator.dir/src/main.cpp.o
+[ 66%] Building CXX object CMakeFiles/area_calculator.dir/src/rectangle.cpp.o
 [100%] Linking CXX executable area_calculator
 [100%] Built target area_calculator
 ```
