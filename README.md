@@ -22,6 +22,8 @@ If you are using a Windows computer, you will first need to install a program ca
 
 You may be asked to exchange keys with the server (which you should allow). Next, you will be prompted for your password. You should note that when typing your password, no characters will be displayed even though you are still typing (this is a security measure).
 
+> Note: You are not required to develop on the `hammer` server for this course, and are encouraged to use your own development environment. However, you will need to validate that your code will run correctly on the `hammer` server as we cannot account for differences in everyone's individual development environments. You are required to host your code on GitHub.
+
 ## The Linux File System
 
 The Linux file system is similar to most other file systems. It is helpful to envision a file system like a tree. You have a root directory (node), denoted simply by `/` in Linux and Mac and typically `C:\` in windows, which has many children that are directories that all live in the root directory. Each of those directories can then hold other directores, which can hold other directories, etc. with as many levels as the user would like.
@@ -262,8 +264,234 @@ Scanning dependencies of target area_calculator
 [100%] Built target area_calculator
 ```
 
-### Extra Stuff
+## Intro to Git and Github
 
-Note from Andrew: Not sure where to put the following note just yet. Maybe near the end of the lab?
+### Git Config
 
-> Note: You are not required to develop on the `hammer` server for this course, and are encouraged to use your own development environment. However, you will need to validate that your code will run correctly on the `hammer` server as we cannot account for differences in everyone's individual development environments. You are required to host your code on GitHub.
+Git is a local program for performing version control, which is also capable of working with a remote git server for saving code off site. GitHub is a web-based Git repository, which the local Git program is capable of interfacing with. Git and GitHub are therefore two seperate systems and Git needs to be configured correctly in order for your code changes to be tracked correctly. You should run the following commands on any new system you are committing from before you start working (these can be run from any directory):
+
+```sh
+git config --global user.name "<first-name last-name>"
+git config --global user.email <github-registered-email>
+```
+
+GitHub will use the user email that you configure with your Git client to track which users are creating what commits. This means that you'll need to use the email address you've registered with GitHub in the above configurations (otherwise you may see commits from an anonymous user)
+
+### Git Init & Clone
+
+The traditional way to start a new project in Git is to create a new directory and change into it. Make sure you are back at your home directory (`cd ~`). Go ahead and run the following commands on the terminal in `hammer`:
+
+```sh
+mkdir lab-01
+cd lab-01
+```
+
+Then to initialize that directory as a Git project, use the following Git initialization command:
+
+```sh
+git init
+```
+
+This will create a hidden `.git` repository which holds all the information that Git uses to keep track of your files and changes. The folder is hidden because it begins with a period (recall earlier in the lab).
+
+However, you use a different method if you want to receive a copy of an already existing repository, which you will do for all of the labs and assignments in this course. Rather than initializing a new repository, you will make a “clone” of a repository that already exists. Start by moving out of the git project you just created and removing that directory:
+
+```sh
+cd ..
+rm -rf lab-01
+```
+
+Now, go to the upper right of this page and click the “Clone or download” dropdown. A box will appear that should say “Clone with HTTPS” (if it says “Clone with SSH”, then click the small blue text to the right that says “Use HTTPS”). The box should look like the following, being careful to make sure it says "Clone with HTTPS".
+
+![Image of clone popup set to HTTPS](https://github.com/cs100/template-lab-01-git-github/blob/master/images/https-clone.png?raw=true)
+
+Copy the link in the box below, this is the GitHub repository url which you will use to clone that repository. Now, run the following command:
+
+```sh
+git clone <github-url>
+```
+
+Replacing the above `<github-url>` with the url that you copied from the “Clone or download” box. This will create a new folder named `lab-01-linux-intro-...` with some additional text based on your username/groupname. This new directory is a copy of the GitHub repository, and is already initialized as a Git project. Move into this new directory and we can begin modifying it.
+
+> Note: README.md files are special in GitHub repositories. The contents of the README.md file in the repository's root will actually be rendered along with a list of files for anyone who visits the repository. The hash (#) at the beginning of the line is part of GitHub Markdown which specifies that this line should be a title. [You can read more about GitHub Markdown here](https://guides.github.com/features/mastering-markdown/).
+
+### Git Status, Add & Commit
+
+Remember our program and its source/header files from earlier? Go ahead and move all of those files into the `lab-01-linux-intro-...` folder.
+
+Git doesn’t automatically keep track of new files for us. Instead, we have to tell Git to start tracking these new files. Run the following command:
+
+```sh
+git status
+```
+
+In the output, there is a section labeled "untracked files." Notice the files in that section. This means that Git knows these files exist, but isn’t currently keeping track of changes to them. We want to keep track of all the `.cpp` `.hpp` files and `CMakeLists.txt`, but not the `area_calculator` file since that should be recompiled to run correctly on different machines.
+
+We don’t want Git to continue to tell us that `area_calculator` is untracked, but luckily Git has a solution for this problem. You can create a file called `.gitignore` that will contain a list of all of the files that you want Git to ignore when it tells you what is/isn’t tracked and modified. Create a `.gitignore` file and add `area_calculator` to that file. You can use the following command to do that:
+
+```sh
+echo “area_calculator” > .gitignore
+```
+
+The echo command will output the string `“area_calculator”` to terminal, which will then be redirected (`>`) to the `.gitignore` file (which will be created if it doesn’t already exist). Now check the status of your repo:
+
+```sh
+git status
+```
+
+Notice that a.out is no longer listed, only the `.cpp` `.hpp`, `CMakeLists.txt` and the new `.gitignore` files are listed as untracked. Now, we can add all of these files to our project with the following commands:
+
+```sh
+git add header/rectangle.hpp
+git add src/rectangle.cpp
+git add src/main.cpp
+git add .gitignore
+```
+
+> Note: Do not add executable or object files to your git repo, only add source files. Tracking executables uses LOTS of disk space and they are unlikely to work on other peoples machines. **If we see these files in your Git repos, your grade on the assignment will be docked 20%**. You should use a `.gitignore` file so that they don’t appear in your Git status or accidentally get added to your repository.
+
+Now, when we run Git status, there is a section labeled "Changes to be committed" with the files that were just added underneath it. This means that Git now thinks these files are part of the project, and will begin to track changes to it.
+
+Whenever we finish a task in our repo, we "commit" our changes. This tells Git to save the current state of the repo, made up of all the files we’ve added, so that we can come back to it later if we need to. Commit your changes using the command:
+
+```sh
+git commit -m "my first commit”
+```
+
+Every commit needs a "commit message" that describes what changes we made in the repo. Writing clear, succinct, informative commit messages is one of the keys to using Git effectively. In this case we passed the -m flag to Git so the commit message was specified in the command line. If we did not pass a flag, then Git would have opened the Vim editor for us to type a longer commit message.
+
+That was not a very informative commit message, so lets edit it to be something more informative. Anytime you need to modify the last commit that you made, you need to amend it, which is done through the following command:
+
+```sh
+git commit --amend
+```
+
+Running this allows you to edit the last commit that you made, including which files were included in that commit. Anything that you have done a `git add` to before running `git commit --amend` will be added to the last commit in addition to allowing you to edit the commit message.
+
+> Note: the --amend flag will let you add anything to the previous commit, even if it's not a good idea. Because of this you should use it carefully and for situations where you have forgotten a minor change (README, comment, better commit message) or your last commit did not actually function correctly and you need to “patch” it.
+
+We didn’t write an informative commit message, so we should modify it to be something more useful. Run the `git commit --amend` command. You should see something like the following open in either Vim or Emacs.
+
+```
+My first commit
+  
+# Please enter the commit message for your changes. Lines starting
+# with ‘#' will be ignored, and an empty message aborts the commit.
+#
+# On branch brrcrites/lab-01
+# Changes to be committed:
+#   added:   header/rectangle.hpp
+#   added:   src/rectangle.cpp
+#   added:   src/main.cpp
+#   added:   .gitignore
+#
+# Changes not staged for commit:
+#
+# Untracked files:
+#
+```
+
+While you can write any message that you want here, GitHub will do some automatic formatting based on past good practices for writing commit messages that you should adhere to. 
+
+* The first line will be formatted as a subject line, and cut off at 50 characters. You should therefore pick a concise subject message that is < 50 characters long 
+* You should separate the first line from the rest of your body text with a blank line
+* The body of your message (anything else you add after the subject but before the commented lines) should describe what changes occurred and why, rather than how you did it. This is often formatted as a bulleted list using a * as the bullet.
+
+Following these rules will make your commits nicely formatted on GitHub and easier to understand and process. Lets update our commit message to the following:
+
+```
+Add rectangle area program
+
+* Added Rectangle class files and main file that calculates the rectangle's area
+  
+# Please enter the commit message for your changes. Lines starting
+# with ‘#' will be ignored, and an empty message aborts the commit.
+#
+# On branch brrcrites/lab-01
+# Changes to be committed:
+#   added:   header/rectangle.hpp
+#   added:   src/rectangle.cpp
+#   added:   src/main.cpp
+#   added:   .gitignore
+#
+# Changes not staged for commit:
+#
+# Untracked files:
+#
+```
+
+After editing the file with the above message, exit your editor and the commit should update.
+
+> Note: The -m flag should only be used when writing very short commit messages, and otherwise you should use the interactive mode to have both a subject and commit body. For some more tips on writing effective git commit messages, read [this blog post](https://chris.beams.io/posts/git-commit/).
+
+Let's make one more commit so we'll have something to play with. Update your `main.cpp` to calculate one more rectangle's area:
+
+```c++
+#include <iostream>
+#include "../header/rectangle.hpp"
+
+using namespace std;
+
+int main()
+{
+	Rectangle rect1, rect2;
+	rect1.set_width(3);
+    	rect1.set_height(4);
+	rect2.set_width(4);
+    	rect2.set_height(2);
+	cout << "Rectangle 1 area: " << rect1.area() << endl;
+	cout << "Rectangle 2 area: " << rect2.area() << endl;
+	return 0;
+}
+```
+
+Now run:
+
+```sh
+git commit -m "Add one more rectangle and compute its area”
+```
+
+Uh oh! We got an error message saying: "no changes added to the commit".
+
+Every time you modify a file, you must explicitly tell Git to add the file again if you want that file included in the commit. This is because sometimes programmers want to commit only some of the modified files. 
+
+Run `git status` to see the files that are currently being tracked. We can add the changes to the `main.cpp` file, and verify it is added, with:
+
+```
+$ git add main.cpp
+$ git status
+```
+
+We can then commit the changes using:
+
+```
+$ git commit -m "Add one more rectangle and compute its area”
+```
+
+### Git Push & Pull
+
+While git is a VCS, GitHub is a remote repository, which is an important distinction for two reasons. The first is that up until now all the work you’ve done has only been saved locally, so if there is a problem with your computer you would have no backup and therefore no way to recover the files. The second is that because all the changes are local, there is no way for people collaborating with you to see your changes or merge them into their own branches (merging and branching will be discussed in a future lab). Go to your GitHub repository for this lab, and you should see that none of the work you've done is listed.
+
+Since we cloned the remote repository from GitHub directly, our local repository is already associated with a remote repository (usually referred to as “remote” or “upstream”). In order to send the changes we’ve made locally to GitHub, we just need to “push” them up to the server (do this now).
+
+```
+$ git push
+```
+
+This will push all the commits you've made since your most recent push. If there haven’t been any other changes to the remote GitHub version, then this will simply send the commits to the repo. However, if there have been changes to the branch (perhaps because someone else has also been working on that same branch or changes have been merged into master), then you will first need to “pull” the remote changes, merge them with your work, and then push the merged version to GitHub:
+
+```
+$ git pull
+```
+
+It is also possible to receive the remote changes (also known as upstream changes) without having Git automatically attempt to merge them into your branch. For this you would use the following command:
+
+```
+$ git fetch
+```
+
+After this, you can do a Git merge to integrate the remote changes. `git pull` essentially runs a `git fetch` and a `git merge` together in one step. You will be using `git push` and `git pull` extensively in your projects for this course, and merge conflicts will likely occur fairly regularly.
+
+## Submission
+
+None of the labs or assignments for this course require direct submissions. Everything will be graded based on your GitHub repositories. Labs will be graded based on the last commit to the repository, while projects will be graded based on specific tags (tags will be explained in a future lab).
