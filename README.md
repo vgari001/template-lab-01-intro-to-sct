@@ -69,7 +69,7 @@ Another example of a hidden file used by a system is the `.bashrc` file, which y
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
+    . /etc/bashrc
 fi
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
@@ -121,8 +121,8 @@ using namespace std;
 
 int main()
 {
-	cout << "hello world!" << endl;
-	return 0;
+    cout << "hello world!" << endl;
+    return 0;
 }
 ```
 
@@ -155,13 +155,13 @@ Before we write our files, lets create some directories to seperate our files an
 #define RECTANGLE_HPP
 
 class Rectangle {
-	private:
-		int width;
-		int height;
-	public:
-        	void set_width(int w);
-        	void set_height(int h);
-		int area();
+    private:
+        int width;
+        int height;
+    public:
+        void set_width(int w);
+        void set_height(int h);
+        int area();
 };
 
 #endif /* RECTANGLE_HPP */
@@ -175,15 +175,15 @@ Also create a source file called `rectangle.cpp` in the `src` directory, and add
 #include "../header/rectangle.hpp"
 
 void Rectangle::set_width(int w) {
-	this->width = w;
+    this->width = w;
 }
 
 void Rectangle::set_height(int h) {
-    	this->height = h;
+    this->height = h;
 }
 
 int Rectangle::area() {
-	return this->width * this->height;
+    return this->width * this->height;
 }
 ```
 
@@ -197,11 +197,11 @@ using namespace std;
 
 int main()
 {
-	Rectangle rect;
-	rect.set_width(3);
+    Rectangle rect;
+    rect.set_width(3);
     rect.set_height(4);
-	cout << "Rectangle area: " << rect.area() << endl;
-	return 0;
+    cout << "Rectangle area: " << rect.area() << endl;
+    return 0;
 }
 ```
 
@@ -220,16 +220,16 @@ Notice that we didn't include the header file `rectangle.hpp` as an argument. Th
 Now we briefly introduce Make which is a GNU project build automation tool. Make is essentially a scripting language for building executables from source code. It works by reading a `Makefile` (that is the required file name) which is a text file that tells Make how to build the target program. The `Makefile` is made up of rules, that look like the following:
 
 ```make
-target:	dependencies ...
-	commands
-	...
+target: dependencies ...
+    commands
+    ...
 ```
 
 Let's go ahead and create a `Makefile` for our program above. Add the following rule into the `Makefile`:
 
 ```make
 area_calculator: src/main.cpp src/rectangle.cpp
-	g++ -o area_calculator src/main.cpp src/rectangle.cpp
+    g++ -o area_calculator src/main.cpp src/rectangle.cpp
 ```
 
 Now go ahead and run `make` in your terminal and you should see the rule's command displayed as output. Using `make` allows you to save lots of time typing out compilations commands so you don't need to keep entering `g++ -o area_calculator main.cpp rectangle.cpp` over and over again when making edits to the source files. It also allows you to create multiple executables from a single command. However, we won't be using make directly in this course but instead a more powerful system.
@@ -274,11 +274,11 @@ using namespace std;
 
 int main()
 {
-	Rectangle rect;
-	rect.set_width(15);
+    Rectangle rect;
+    rect.set_width(15);
     rect.set_height(30);
-	cout << "Rectangle area: " << rect.area() << endl;
-	return 0;
+    cout << "Rectangle area: " << rect.area() << endl;
+    return 0;
 }
 ```
 
@@ -452,17 +452,17 @@ using namespace std;
 
 int main()
 {
-	Rectangle rect1, rect2;
-	rect1.set_width(3);
+    Rectangle rect1, rect2;
+    rect1.set_width(3);
     rect1.set_height(4);
 
-	rect2.set_width(4);
+    rect2.set_width(4);
     rect2.set_height(2);
 
-	cout << "Rectangle 1 area: " << rect1.area() << endl;
-	cout << "Rectangle 2 area: " << rect2.area() << endl;
+    cout << "Rectangle 1 area: " << rect1.area() << endl;
+    cout << "Rectangle 2 area: " << rect2.area() << endl;
 
-	return 0;
+    return 0;
 }
 ```
 
