@@ -12,7 +12,7 @@ You will need to log into the `hammer` server using a [Secure Shell (SSH)](https
 
 If you are using a Linux or Mac computer, you can run the following command in the terminal:
 
-```
+```sh
 ssh <your_CS_username>@hammer.cs.ucr.edu
 ```
 
@@ -32,7 +32,7 @@ One important thing to note at this point is that you are working on a server wh
 
 Go ahead and type the following command:
 
-```
+```sh
 mkdir example_dir
 ```
 
@@ -40,7 +40,7 @@ This will create a new directory in your current directory, which (if you ran th
 
 Now, type the following command:
 
-```
+```sh
 cd /home/csmajs/<your_CS_username>/example_dir
 ```
 
@@ -52,7 +52,7 @@ Go back to your home directory (`cd ~`) and type the command `ls` which lists th
 
 Now that we've demonstrated how to create and traverse directories, let's go ahead and delete `example_dir`. Make sure you are in your home directory, then type:
 
-```
+```sh
 rm -rf example_dir
 ```
 
@@ -62,7 +62,7 @@ rm -rf example_dir
 
 Another example of a hidden file used by a system is the `.bashrc` file, which you should see when running `ls -a` from your home directory (`~`). The `bashrc` file is a config file that is executed every time your terminal loads such as when you login to `hammer` over SSH. Go ahead and type `cat ~/.bashrc` to view its contents. You should see something like below:
 
-```
+```sh
 # .bashrc
 
 # Source global definitions
@@ -80,7 +80,7 @@ The `cat` command is short for "concatenate" which has a lot of different uses, 
 
 This server uses a version of CentOS Linux, which is a Linux distribution that has the benefit of being extremely stable. The problem with this version of Linux is that in order to keep it stable, the CentOS developers don't update the available software often. In this class (and very likely in industry) you will use Git to version, coordinate, and submit your code to online storage, known as a repository. The README you are currently viewing is actually stored in a git repo. The version of the Git tool that is currently available as the default on `hammer` is not compatible with the online service GitHub, so you will need to enable an updated version of the tool for your account with the following command in your terminal:
 
-```
+```sh
 $ source /opt/rh/devtoolset-6/enable
 ```
 
@@ -96,7 +96,7 @@ Another useful tool is aliasing. Aliasing works well when you have a complicated
 
 `ls -al` is a nifty command to have, but wouldn't it be cool to type something shorter like `la` instead? Let's go ahead and try that. Repeat the steps above with opening up `.bashrc` in Vim. Type the following command on the next line (after where you put the source commmand):
 
-```
+```sh
 alias la="ls -al"
 ```
 
@@ -104,7 +104,7 @@ Save and exit the file, then run `source .bashrc`. Now you can use `la`! Notice 
 
 For students with Linux and macOS machines: try making an alias in your local machine's `.bashrc` file for logging into `hammer`. Something like this will work:
 
-```
+```sh
 alias hammer="ssh <your_CS_username>@hammer.cs.ucr.edu"
 ```
 
@@ -112,7 +112,7 @@ alias hammer="ssh <your_CS_username>@hammer.cs.ucr.edu"
 
 GCC is the GNU project C Compiler and is one of the most used compilers for C code (macOS previously used GCC but not uses another compiler called Clang). It typically also comes with G++ which is a similar compiler for C++ code. The `g++` command invokes this compiler from the command line. To demonstrate how it works, go ahead and write a simple `hello world!` program using the command line editor of your choice (save the file as `main.cpp`):
 
-```
+```c++
 #include <iostream>
 
 using namespace std;
@@ -126,7 +126,7 @@ int main()
 
 Once finished make sure to save and quit out of your editor and then type the following command in the terminal:
 
-```
+```sh
 g++ -std=c++11 main.cpp
 ```
 
@@ -136,7 +136,7 @@ If successful you shouldn't see any output (if not successful, fix your errors u
 
 Most of the time you want to give your program a recognizable name. Adding the `-o` "output" flag followed by a name and the executable will output with that name. Go ahead and run `rm a.out` to delete the old executable then run the following command:
 
-```
+```sh
 g++ -std=c++11 -o hello_world main.cpp
 ```
 
@@ -205,7 +205,7 @@ The `main.cpp` file was not created in the `src` directory so we should move it 
 
 We are now ready to compile and run! Go ahead and run the following command (notice that the g++ command can take relative paths, so the below command is being run from your home directory):
 
-```
+```sh
 g++ -std=c++11 -o area_calculator src/main.cpp src/rectangle.cpp
 ```
 
