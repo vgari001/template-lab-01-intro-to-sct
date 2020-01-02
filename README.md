@@ -12,7 +12,7 @@ You will need to log into the `hammer` server using a [Secure Shell (SSH)](https
 
 If you are using a Linux or Mac computer, you can run the following command in the terminal:
 
-```
+```bash
 ssh <your_CS_username>@hammer.cs.ucr.edu
 ```
 
@@ -32,7 +32,7 @@ One important thing to note at this point is that you are working on a server wh
 
 Go ahead and type the following command:
 
-```
+```bash
 mkdir example_dir
 ```
 
@@ -40,7 +40,7 @@ This will create a new directory in your current directory, which (if you ran th
 
 Now, type the following command:
 
-```
+```bash
 cd /home/csmajs/<your_CS_username>/example_dir
 ```
 
@@ -52,7 +52,7 @@ Go back to your home directory (`cd ~`) and type the command `ls` which lists th
 
 Now that we've demonstrated how to create and traverse directories, let's go ahead and delete `example_dir`. Make sure you are in your home directory, then type:
 
-```
+```bash
 rm -rf example_dir
 ```
 
@@ -62,7 +62,7 @@ rm -rf example_dir
 
 Another example of a hidden file used by a system is the `.bashrc` file, which you should see when running `ls -a` from your home directory (`~`). The `bashrc` file is a config file that is executed every time your terminal loads such as when you login to `hammer` over SSH. Go ahead and type `cat ~/.bashrc` to view its contents. You should see something like below:
 
-```
+```bash
 # .bashrc
 
 # Source global definitions
@@ -80,7 +80,7 @@ The `cat` command is short for "concatenate" which has a lot of different uses, 
 
 This server uses a version of CentOS Linux, which is a Linux distribution that has the benefit of being extremely stable. The problem with this version of Linux is that in order to keep it stable, the CentOS developers don't update the available software often. In this class (and very likely in industry) you will use Git to version, coordinate, and submit your code to online storage, known as a repository. The README you are currently viewing is actually stored in a git repo. The version of the Git tool that is currently available as the default on `hammer` is not compatible with the online service GitHub, so you will need to enable an updated version of the tool for your account with the following command in your terminal:
 
-```
+```bash
 $ source /opt/rh/devtoolset-6/enable
 ```
 
@@ -96,7 +96,7 @@ Another useful tool is aliasing. Aliasing works well when you have a complicated
 
 `ls -al` is a nifty command to have, but wouldn't it be cool to type something shorter like `la` instead? Let's go ahead and try that. Repeat the steps above with opening up `.bashrc` in Vim. Type the following command on the next line (after where you put the source commmand):
 
-```
+```bash
 alias la="ls -al"
 ```
 
@@ -104,15 +104,15 @@ Save and exit the file, then run `source .bashrc`. Now you can use `la`! Notice 
 
 For students with Linux and macOS machines: try making an alias in your local machine's `.bashrc` file for logging into `hammer`. Something like this will work:
 
-```
+```bash
 alias hammer="ssh <your_CS_username>@hammer.cs.ucr.edu"
 ```
 
-## Using `g++` for Compilation
+## Using `g++` and Make for Compilation
 
 Using `g++` invokes GNU's C++ compiler. To demonstrate how it works, go ahead and write a simple `hello world!` program using the command line editor of your choice (save the file as `main.cpp`):
 
-```
+```c++
 #include <iostream>
 
 using namespace std;
@@ -126,17 +126,19 @@ int main()
 
 Once written, make sure to save and quit out of your editor. Then, type the following command:
 
-```
+```bash
 g++ -std=c++11 main.cpp
 ```
 
+> Note: Most shells support autocompletion when typing out commands, and is useful when you have a command with many arguments to type out. For example, start typing `g++ -std=c++11 ma`. After typing `a`, press the Tab key. Bash (the shell you are using in `hammer`) should autocomplete to `main.cpp`.
+
 If successful, there shouldn't be any output. A quick `ls` will show that a new file named `a.out` was generated. This is the executable target file of your program. To run it, type `./a.out` and press Enter. You should now see `hello world!` as output.
 
-> Note: The above command will work by just typing `g++ main.cpp`. The flag `-std=c++11` is added to tell the compiler to use an updated standard of C++. Please use that flag when compiling programs within this course.
+> Note: The above command will work by just typing `g++ main.cpp`. The flag `-std=c++11` is added to tell the compiler to use an updated standard of C++. Please use that flag when compiling programs for this course.
 
 Most of the time, you would want to give your program a recognizable name. To do that, we can use the `-o` flag to name our executable target file. Go ahead and type `rm a.out` to delete the executable. Then, type the following command:
 
-```
+```bash
 g++ -std=c++11 -o my_program main.cpp
 ```
 
@@ -146,7 +148,7 @@ When developing larger programs in object-oriented languages, it is common to br
 
 We will creating a simple Rectangle class to show this. Go ahead and make a header file called `rectangle.h`, and add the following code:
 
-```
+```c++
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
@@ -164,7 +166,7 @@ class Rectangle {
 
 Save and quit. Now, create a class (source) file called `rectangle.cpp`, and add the following code:
 
-```
+```c++
 #include "rectangle.h"
 
 void Rectangle::set_values(int w, int h) {
@@ -179,7 +181,7 @@ int Rectangle::area() {
 
 Save and quit. Finally, overwrite your current `main.cpp` with following code:
 
-```
+```c++
 #include <iostream>
 #include "rectangle.h"
 
@@ -196,11 +198,58 @@ int main()
 
 We are now ready to compile and run! Go ahead and run the following command:
 
-```
+```bash
 g++ -std=c++11 -o my_cooler_program main.cpp rectangle.cpp
 ```
 
-Notice that we didn't include the header file `rectangle.h` as an argument. That is where the `#include "rectangle.h"` within `rectangle.cpp` comes in handy; it tells the compiler to include the header for us. Nice! Go ahead and run `./my_cooler_program`. You should see `area: 12` as output.
+Notice that we didn't include the header file `rectangle.h` as an argument. That is where the `#include "rectangle.h"` within `rectangle.cpp` comes in handy; it makes sure that the `rectangle.h` file gets included during compilation (this has to do with the way that C++ compilers stitch some files together during compilation, and won't be further covered in this lab). Nice! Go ahead and run `./my_cooler_program`. You should see `area: 12` as output.
+
+Now we introduce Make, GNU's build automation tool. It automatically builds executables from source code by reading a file called the `Makefile` which tells Make how to build the target program. The `Makefile` is made up of rules, that look like the following:
+
+```make
+target:	dependencies ...
+	commands
+	...
+```
+
+Let's go ahead and create a `Makefile` for our program above. Add the following rule into the `Makefile`:
+
+```make
+my_cooler_program: main.cpp rectangle.cpp
+	g++ -o my_cooler_program main.cpp rectangle.cpp
+```
+
+Save and quit. Now, go ahead and run `make`. You should see the rule's command displayed as output. By this point, you hopefully see the potential in using `make`; you don't need to keep entering `g++ -o my_cooler_program main.cpp rectangle.cpp` over and over again when making edits to the source files.
+
+## CMake
+
+[CMake](https://cmake.org/) is a build system built on top of GNU's `make` and supports some more advanced features. The CMake system looks for a CMakeLists.txt file in order to know what to build, so start by creating the following CMakeLists.txt file:
+
+```cmake
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+ADD_EXECUTABLE(my_cooler_program
+    main.cpp
+    rectangle.cpp
+)
+```
+
+The first function, `CMAKE_MINIMUM_REQUIRED`, sets the minimum version of CMake that can be used to compile this program. The function `ADD_EXECUTABLE` tells CMake to create a new exectuable named after the first parameter in that function, in this case `my_cooler_program`. We then list all the `.cpp` files which need to be included in that executable. Earlier, we mentioned that CMake is built on top of `make`. To be more specific, it generates really good Makefiles. Run the following command from the terminal in order to generate a new make file to compile your program:
+
+```bash
+$ cmake3 .
+```
+
+This command envokes the CMake build system in the local directory (where our CMakeLists.txt file is located). **Make sure you use the `cmake3` command and not just `cmake`**. Hammer has two version of CMake installed, and if you do not use the `cmake3` command you will get an error (note that you will likely just use the `cmake` command when you develop on your local environment, since you will only have one version of CMake installed). You should now have an updated `Makefile` that matches the executable that we asked for in our CMakeLists.txt. Go ahead and envoke the `Makefile` (type `make`). You should see a nicely designed build percentage which will generate a new `my_cooler_program` executable.
+
+```bash
+$ make
+Scanning dependencies of target my_cooler_program
+[ 33%] Building CXX object CMakeFiles/my_cooler_program.dir/main.cpp.o
+[ 66%] Building CXX object CMakeFiles/my_cooler_program.dir/rectangle.cpp.o
+[100%] Linking CXX executable my_cooler_program
+[100%] Built target my_cooler_program
+```
 
 ### Extra Stuff
 
