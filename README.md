@@ -130,6 +130,8 @@ Once finished make sure to save and quit out of your editor and then type the fo
 g++ -std=c++11 main.cpp
 ```
 
+> Note: Most shells support autocompletion when typing out commands, and is useful when you have a command with many arguments to type out. For example, start typing `g++ -std=c++11 ma`. After typing `a`, press the Tab key. Bash (the shell you are using in `hammer`) should autocomplete to `main.cpp`.
+
 If successful you shouldn't see any output (if not successful, fix your errors until you are able to compile your program). A quick `ls` will show that a new file named `a.out` was generated which is the executable generated from your program. You execute this executable (also known as a binary) with `./a.out`. Note that the `.` in this case is the current directory and is required [primarily for security reasons](https://stackoverflow.com/questions/6331075/why-do-you-need-dot-slash-before-executable-or-script-name-to-run-it-in-bas). When you execute your program you should see "hello world!" printed out to the terminal.
 
 > Note: The above command will work without the `-std=c++11` flag. By default g++ will compile to the C++98 standard which does not have a number of features we will need in this course. You will need to use this flag to enable the C++11 standard which we will use in this course.
@@ -210,6 +212,53 @@ g++ -std=c++11 -o area_calculator src/main.cpp src/rectangle.cpp
 ```
 
 Notice that we didn't include the header file `rectangle.h` as an argument. The `#include "rectangle.h"` within `rectangle.cpp` tells the compiler to include the header for us (and is why the include guards are necessary). Nice! Go ahead and run `./area_calculator`. You should see `Rectangle area: 12` as output.
+
+Now we introduce Make, GNU's build automation tool. It automatically builds executables from source code by reading a file called the `Makefile` which tells Make how to build the target program. The `Makefile` is made up of rules, that look like the following:
+
+```make
+target:	dependencies ...
+	commands
+	...
+```
+
+Let's go ahead and create a `Makefile` for our program above. Add the following rule into the `Makefile`:
+
+```make
+hello_world: src/main.cpp src/rectangle.cpp
+	g++ -o my_cooler_program src/main.cpp src/rectangle.cpp
+```
+
+Save and quit. Now, go ahead and run `make`. You should see the rule's command displayed as output. By this point, you hopefully see the potential in using `make`; you don't need to keep entering `g++ -o my_cooler_program main.cpp rectangle.cpp` over and over again when making edits to the source files.
+
+## CMake
+
+[CMake](https://cmake.org/) is a build system built on top of GNU's `make` and supports some more advanced features. The CMake system looks for a CMakeLists.txt file in order to know what to build, so start by creating the following CMakeLists.txt file:
+
+```cmake
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+ADD_EXECUTABLE(my_cooler_program
+    main.cpp
+    rectangle.cpp
+)
+```
+
+The first function, `CMAKE_MINIMUM_REQUIRED`, sets the minimum version of CMake that can be used to compile this program. The function `ADD_EXECUTABLE` tells CMake to create a new exectuable named after the first parameter in that function, in this case `my_cooler_program`. We then list all the `.cpp` files which need to be included in that executable. Earlier, we mentioned that CMake is built on top of `make`. To be more specific, it generates really good Makefiles. Run the following command from the terminal in order to generate a new make file to compile your program:
+
+```sh
+$ cmake3 .
+```
+
+This command envokes the CMake build system in the local directory (where our CMakeLists.txt file is located). **Make sure you use the `cmake3` command and not just `cmake`**. Hammer has two version of CMake installed, and if you do not use the `cmake3` command you will get an error (note that you will likely just use the `cmake` command when you develop on your local environment, since you will only have one version of CMake installed). You should now have an updated `Makefile` that matches the executable that we asked for in our CMakeLists.txt. Go ahead and envoke the `Makefile` (type `make`). You should see a nicely designed build percentage which will generate a new `my_cooler_program` executable.
+
+```sh
+$ make
+Scanning dependencies of target my_cooler_program
+[ 33%] Building CXX object CMakeFiles/my_cooler_program.dir/main.cpp.o
+[ 66%] Building CXX object CMakeFiles/my_cooler_program.dir/rectangle.cpp.o
+[100%] Linking CXX executable my_cooler_program
+[100%] Built target my_cooler_program
+``
 
 ### Extra Stuff
 
