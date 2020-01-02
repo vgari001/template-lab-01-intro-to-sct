@@ -1,6 +1,6 @@
 # Intro to Linux
 
-> Author(s): Andrew Lvovsky (@borninla) and Brian Crites (@brrcrites)
+> Author(s): Andrew Lvovsky ([@borninla](https://github.com/borninla)) and Brian Crites ([@brrcrites](https://github.com/brrcrites))
 
 Welcome to CS 100! For the first lab of the course, we are introducing the basics needed to get around the Linux environment. There are many reasons Linux is still used in industry today, ranging from its open-source nature to its excellent stability. There are various versions of Unix/Linux, known as distributions, which are built from a relatively small number of base kernels. In this course, we will be logging into and using a server provided by the university named `hammer`. In addition to learning Linux basics we will also (re-)introducing g++, CMake, Git and GitHub in this lab.
 
@@ -12,7 +12,7 @@ You will need to log into the `hammer` server using a [Secure Shell (SSH)](https
 
 If you are using a Linux or Mac computer, you can run the following command in the terminal:
 
-```bash
+```sh
 ssh <your_CS_username>@hammer.cs.ucr.edu
 ```
 
@@ -32,7 +32,7 @@ One important thing to note at this point is that you are working on a server wh
 
 Go ahead and type the following command:
 
-```bash
+```sh
 mkdir example_dir
 ```
 
@@ -40,7 +40,7 @@ This will create a new directory in your current directory, which (if you ran th
 
 Now, type the following command:
 
-```bash
+```sh
 cd /home/csmajs/<your_CS_username>/example_dir
 ```
 
@@ -52,17 +52,17 @@ Go back to your home directory (`cd ~`) and type the command `ls` which lists th
 
 Now that we've demonstrated how to create and traverse directories, let's go ahead and delete `example_dir`. Make sure you are in your home directory, then type:
 
-```bash
+```sh
 rm -rf example_dir
 ```
 
-`rm` is the command used to "remove" files or directories. Normally, if you have a file, you can just enter `rm <filename>`. Since we are dealing with a directory, we need to add the extra `-rf` option flags. `r` recursively removes files and directories relative to the directory you are removing, while 'f' ignores nonexistent files and doesn't prompt the user to delete every file within the directory that needs to be deleted. That said, with great power comes great responsibility. Use `rm -rf` only when needed. The last thing you want is to accidently delete important files or directories.
+`rm` is the command used to "remove" files or directories. If you have a regular file you can enter `rm <filename>` without any flags. However, since we are dealing with a directory we need to add the extra `-rf` options. `r` recursively removes files and directories within the directory you are removing and 'f' ignores nonexistent files and doesn't prompt the user to confirm each deletion. That said, with great power comes great responsibility. Use `rm -rf` only when necessary. The last thing you want is to accidently delete important files or directories.
 
 ## The `bashrc` File
 
 Another example of a hidden file used by a system is the `.bashrc` file, which you should see when running `ls -a` from your home directory (`~`). The `bashrc` file is a config file that is executed every time your terminal loads such as when you login to `hammer` over SSH. Go ahead and type `cat ~/.bashrc` to view its contents. You should see something like below:
 
-```bash
+```sh
 # .bashrc
 
 # Source global definitions
@@ -80,7 +80,7 @@ The `cat` command is short for "concatenate" which has a lot of different uses, 
 
 This server uses a version of CentOS Linux, which is a Linux distribution that has the benefit of being extremely stable. The problem with this version of Linux is that in order to keep it stable, the CentOS developers don't update the available software often. In this class (and very likely in industry) you will use Git to version, coordinate, and submit your code to online storage, known as a repository. The README you are currently viewing is actually stored in a git repo. The version of the Git tool that is currently available as the default on `hammer` is not compatible with the online service GitHub, so you will need to enable an updated version of the tool for your account with the following command in your terminal:
 
-```bash
+```sh
 $ source /opt/rh/devtoolset-6/enable
 ```
 
@@ -96,7 +96,7 @@ Another useful tool is aliasing. Aliasing works well when you have a complicated
 
 `ls -al` is a nifty command to have, but wouldn't it be cool to type something shorter like `la` instead? Let's go ahead and try that. Repeat the steps above with opening up `.bashrc` in Vim. Type the following command on the next line (after where you put the source commmand):
 
-```bash
+```sh
 alias la="ls -al"
 ```
 
@@ -104,13 +104,13 @@ Save and exit the file, then run `source .bashrc`. Now you can use `la`! Notice 
 
 For students with Linux and macOS machines: try making an alias in your local machine's `.bashrc` file for logging into `hammer`. Something like this will work:
 
-```bash
+```sh
 alias hammer="ssh <your_CS_username>@hammer.cs.ucr.edu"
 ```
 
-## Using `g++` and Make for Compilation
+## Command Line Compilation
 
-Using `g++` invokes GNU's C++ compiler. To demonstrate how it works, go ahead and write a simple `hello world!` program using the command line editor of your choice (save the file as `main.cpp`):
+GCC is the GNU project C Compiler and is one of the most used compilers for C code (macOS previously used GCC but not uses another compiler called Clang). It typically also comes with G++ which is a similar compiler for C++ code. The `g++` command invokes this compiler from the command line. To demonstrate how it works, go ahead and write a simple `hello world!` program using the command line editor of your choice (save the file as `main.cpp`):
 
 ```c++
 #include <iostream>
@@ -124,62 +124,68 @@ int main()
 }
 ```
 
-Once written, make sure to save and quit out of your editor. Then, type the following command:
+Once finished make sure to save and quit out of your editor and then type the following command in the terminal:
 
-```bash
+```sh
 g++ -std=c++11 main.cpp
 ```
 
 > Note: Most shells support autocompletion when typing out commands, and is useful when you have a command with many arguments to type out. For example, start typing `g++ -std=c++11 ma`. After typing `a`, press the Tab key. Bash (the shell you are using in `hammer`) should autocomplete to `main.cpp`.
 
-If successful, there shouldn't be any output. A quick `ls` will show that a new file named `a.out` was generated. This is the executable target file of your program. To run it, type `./a.out` and press Enter. You should now see `hello world!` as output.
+If successful you shouldn't see any output (if not successful, fix your errors until you are able to compile your program). A quick `ls` will show that a new file named `a.out` was generated which is the executable generated from your program. You execute this executable (also known as a binary) with `./a.out`. Note that the `.` in this case is the current directory and is required [primarily for security reasons](https://stackoverflow.com/questions/6331075/why-do-you-need-dot-slash-before-executable-or-script-name-to-run-it-in-bas). When you execute your program you should see "hello world!" printed out to the terminal.
 
-> Note: The above command will work by just typing `g++ main.cpp`. The flag `-std=c++11` is added to tell the compiler to use an updated standard of C++. Please use that flag when compiling programs for this course.
+> Note: The above command will work without the `-std=c++11` flag. By default g++ will compile to the C++98 standard which does not have a number of features we will need in this course. You will need to use this flag to enable the C++11 standard which we will use in this course.
 
-Most of the time, you would want to give your program a recognizable name. To do that, we can use the `-o` flag to name our executable target file. Go ahead and type `rm a.out` to delete the executable. Then, type the following command:
+Most of the time you want to give your program a recognizable name. Adding the `-o` "output" flag followed by a name and the executable will output with that name. Go ahead and run `rm a.out` to delete the old executable then run the following command:
 
-```bash
-g++ -std=c++11 -o my_program main.cpp
+```sh
+g++ -std=c++11 -o hello_world main.cpp
 ```
 
-You have now created an executable called `my_program`. You can run it by typing `./my_program`.
+You have now created an executable called `hello_world` and can execute it by typing `./hello_world`.
 
-When developing larger programs in object-oriented languages, it is common to break up work into multiple source and header files (in C++'s case, `.cpp` and `.h` files respectively). We will now show how `g++` can be used to compile multiple files into a single executable.
+When developing larger programs in object-oriented languages like you will in this class it is common to break up work into multiple source and header files (in C++'s case, `.cpp` and `.hpp` files respectively). The g++ compiler allows you to compile multiple files into a single executable.
 
-We will creating a simple Rectangle class to show this. Go ahead and make a header file called `rectangle.h`, and add the following code:
+Before we write our files lets create some directories to seperate our files and make things easier to find. Create a `src` direcector and a `header` directory where we will put the respective source and header files. We will creating a simple Rectangle class which has a height and width and calculates the rectangles area. Go ahead and make a header file called `rectangle.h` in the `header` directory, and add the following code:
 
 ```c++
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
 class Rectangle {
-	public:
-		void set_values(int w, int h);
-		int area();
 	private:
-		int _width;
-		int _height;
+		int width;
+		int height;
+	public:
+        void set_width(int w);
+        void set_height(int h);
+		int area();
 };
 
 #endif /* RECTANGLE_H */
 ```
 
-Save and quit. Now, create a class (source) file called `rectangle.cpp`, and add the following code:
+> The `#ifndef`, `#define`, and `#endif` are known as [sharp guards or include guards](https://www.cprogramming.com/tutorial/cpreprocessor.html) and cause the compiler to only include this file once even when its referenced multiple times. It is a good idea to add these to the top of all your header files and we will cover them more in a future lab.
+
+Also create a source file called `rectangle.cpp` in the `src` directory, and add the following code:
 
 ```c++
 #include "rectangle.h"
 
-void Rectangle::set_values(int w, int h) {
-	_width = w;
-	_height = h;
+void Rectangle::set_width(int w) {
+	this->width = w;
+}
+
+void Rectangle::set_height(int h) {
+    this->height = h;
 }
 
 int Rectangle::area() {
-	return _width * _height;
+	return this->width * this->height;
 }
 ```
 
-Save and quit. Finally, overwrite your current `main.cpp` with following code:
+Finally, overwrite your current `main.cpp` with following code:
 
 ```c++
 #include <iostream>
@@ -190,19 +196,22 @@ using namespace std;
 int main()
 {
 	Rectangle rect;
-	rect.set_values(3,4);
-	cout << "area: " << rect.area() << endl;
+	rect.set_width(3);
+    rect.set_height(4);
+	cout << "Rectangle area: " << rect.area() << endl;
 	return 0;
 }
 ```
 
-We are now ready to compile and run! Go ahead and run the following command:
+The `main.cpp` file was not created in the `src` directory so we should move it there. You can use the command `mv <source> <destination>` to move a file from `<source>` to `<destination>` where the `<source>` is a file and the `<destination>` is a file or folder. From your home directory where `main.cpp` should be use `mv main.cpp src/` to move `main.cpp` into the `src` directory. If you added a filename after `src/` in the destination part of the move command it would also rename the file and if its omitted it will use the source files name (which is fine in this case). The `mv` move command is used for both moving files and renaming them. 
 
-```bash
-g++ -std=c++11 -o my_cooler_program main.cpp rectangle.cpp
+We are now ready to compile and run! Go ahead and run the following command (notice that the g++ command can take relative paths, so the below command is being run from your home directory):
+
+```sh
+g++ -std=c++11 -o area_calculator src/main.cpp src/rectangle.cpp
 ```
 
-Notice that we didn't include the header file `rectangle.h` as an argument. That is where the `#include "rectangle.h"` within `rectangle.cpp` comes in handy; it makes sure that the `rectangle.h` file gets included during compilation (this has to do with the way that C++ compilers stitch some files together during compilation, and won't be further covered in this lab). Nice! Go ahead and run `./my_cooler_program`. You should see `area: 12` as output.
+Notice that we didn't include the header file `rectangle.h` as an argument. The `#include "rectangle.h"` within `rectangle.cpp` tells the compiler to include the header for us (and is why the include guards are necessary). Nice! Go ahead and run `./area_calculator`. You should see `Rectangle area: 12` as output.
 
 Now we introduce Make, GNU's build automation tool. It automatically builds executables from source code by reading a file called the `Makefile` which tells Make how to build the target program. The `Makefile` is made up of rules, that look like the following:
 
@@ -215,8 +224,8 @@ target:	dependencies ...
 Let's go ahead and create a `Makefile` for our program above. Add the following rule into the `Makefile`:
 
 ```make
-my_cooler_program: main.cpp rectangle.cpp
-	g++ -o my_cooler_program main.cpp rectangle.cpp
+hello_world: src/main.cpp src/rectangle.cpp
+	g++ -o my_cooler_program src/main.cpp src/rectangle.cpp
 ```
 
 Save and quit. Now, go ahead and run `make`. You should see the rule's command displayed as output. By this point, you hopefully see the potential in using `make`; you don't need to keep entering `g++ -o my_cooler_program main.cpp rectangle.cpp` over and over again when making edits to the source files.
@@ -236,20 +245,20 @@ ADD_EXECUTABLE(my_cooler_program
 
 The first function, `CMAKE_MINIMUM_REQUIRED`, sets the minimum version of CMake that can be used to compile this program. The function `ADD_EXECUTABLE` tells CMake to create a new exectuable named after the first parameter in that function, in this case `my_cooler_program`. We then list all the `.cpp` files which need to be included in that executable. Earlier, we mentioned that CMake is built on top of `make`. To be more specific, it generates really good Makefiles. Run the following command from the terminal in order to generate a new make file to compile your program:
 
-```bash
+```sh
 $ cmake3 .
 ```
 
 This command envokes the CMake build system in the local directory (where our CMakeLists.txt file is located). **Make sure you use the `cmake3` command and not just `cmake`**. Hammer has two version of CMake installed, and if you do not use the `cmake3` command you will get an error (note that you will likely just use the `cmake` command when you develop on your local environment, since you will only have one version of CMake installed). You should now have an updated `Makefile` that matches the executable that we asked for in our CMakeLists.txt. Go ahead and envoke the `Makefile` (type `make`). You should see a nicely designed build percentage which will generate a new `my_cooler_program` executable.
 
-```bash
+```sh
 $ make
 Scanning dependencies of target my_cooler_program
 [ 33%] Building CXX object CMakeFiles/my_cooler_program.dir/main.cpp.o
 [ 66%] Building CXX object CMakeFiles/my_cooler_program.dir/rectangle.cpp.o
 [100%] Linking CXX executable my_cooler_program
 [100%] Built target my_cooler_program
-```
+``
 
 ### Extra Stuff
 
