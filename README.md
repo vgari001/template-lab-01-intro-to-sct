@@ -297,31 +297,31 @@ Now if you run `cmake3 .` and `make` you will see two executables generated `are
 
 ### Git Config
 
-Git is a local program for performing version control, which is also capable of working with a remote git server for saving code off site. GitHub is a web-based Git repository, which the local Git program is capable of interfacing with. Git and GitHub are therefore two seperate systems and Git needs to be configured correctly in order for your code changes to be tracked correctly. You should run the following commands on any new system you are committing from before you start working (these can be run from any directory):
+Git is a local program for performing version control which is usually paired with a remote git server for saving code off site. GitHub is a web-based Git repository which your local Git program is capable of interfacing with. Git and GitHub are therefore two seperate systems and Git needs to be configured correctly in order for your code changes to be tracked and attributed correctly on GitHub. You should run the following commands on any new system you are committing from before you start working (these can be run from any directory and only have to be run once per system):
 
 ```sh
-git config --global user.name "<first-name last-name>"
+git config --global user.name "<github-username>"
 git config --global user.email <github-registered-email>
 ```
 
-GitHub will use the user email that you configure with your Git client to track which users are creating what commits. This means that you'll need to use the email address you've registered with GitHub in the above configurations (otherwise you may see commits from an anonymous user)
+GitHub will use the email that you configure with your Git client to track which users are making which changes. This means that you'll need to use the email address you've registered with GitHub in the above configurations (otherwise you may see commits from an anonymous user). In this course we look at commits and who made them to make sure partners in the projects and labs are contributing equally, so having misattributed commits may lead to point deductions. If you have a few which are misattribued this is not an issue but you should configure your client quickly after you notice the problem to correct the issue.
 
 ### Git Init & Clone
 
-The traditional way to start a new project in Git is to create a new directory and change into it. Make sure you are back at your home directory (`cd ~`). Go ahead and run the following commands on the terminal in `hammer`:
+New Git repositories can be created either locally using the git client or through GitHub directly. Make sure you are back at your home directory (`cd ~`) and run the following commands on the terminal in `hammer`:
 
 ```sh
 mkdir lab-01
 cd lab-01
 ```
 
-Then to initialize that directory as a Git project, use the following Git initialization command:
+Then to initialize that directory as a Git project, use the following Git command:
 
 ```sh
 git init
 ```
 
-This will create a hidden `.git` repository which holds all the information that Git uses to keep track of your files and changes. The folder is hidden because it begins with a period (recall earlier in the lab).
+This will create a hidden `.git` repository (which you can see with `ls -a`) that holds all the information that Git uses to keep track of your files and changes. The folder is hidden because it begins with a period (recall earlier in the lab) and is typically not modified by users directly.
 
 However, you use a different method if you want to receive a copy of an already existing repository, which you will do for all of the labs and assignments in this course. Rather than initializing a new repository, you will make a “clone” of a repository that already exists. Start by moving out of the git project you just created and removing that directory:
 
@@ -346,7 +346,7 @@ Replacing the above `<github-url>` with the url that you copied from the “Clon
 
 ### Git Status, Add & Commit
 
-Remember our program and its source/header files from earlier? Go ahead and move all of those files into the `lab-01-linux-intro-...` folder.
+Remember our program and its source/header files from earlier? Go ahead and move all of those files into the new `lab-01-linux-intro-...` folder.
 
 Git doesn’t automatically keep track of new files for us. Instead, we have to tell Git to start tracking these new files. Run the following command:
 
@@ -354,40 +354,29 @@ Git doesn’t automatically keep track of new files for us. Instead, we have to 
 git status
 ```
 
-In the output, there is a section labeled "untracked files." Notice the files in that section. This means that Git knows these files exist, but isn’t currently keeping track of changes to them. We want to keep track of all the `.cpp` `.hpp` files and `CMakeLists.txt`, but not the `area_calculator` file since that should be recompiled to run correctly on different machines.
+The `status` command lists the current status of your Git repository, mostly showing whcih files have changes. In the output, there is a section labeled "untracked files." Notice the files in that section. This means that Git knows these files exist, but isn’t currently keeping track of changes to them. We want to keep track of all the `.cpp` `.hpp` files and `CMakeLists.txt`, but not the `area_calculator` file since that should be recompiled to run correctly on different machines. It is important to note that Git does not automatically save changes to your files either locally or on GitHub. When you have made a set of changes that you want to save you will have to use the comands we are going to introduce below so you will use these commands very often.
 
-We don’t want Git to continue to tell us that `area_calculator` is untracked, but luckily Git has a solution for this problem. You can create a file called `.gitignore` that will contain a list of all of the files that you want Git to ignore when it tells you what is/isn’t tracked and modified. Create a `.gitignore` file and add `area_calculator` to that file. You can use the following command to do that:
-
-```sh
-echo “area_calculator” > .gitignore
-```
-
-The echo command will output the string `“area_calculator”` to terminal, which will then be redirected (`>`) to the `.gitignore` file (which will be created if it doesn’t already exist). Now check the status of your repo:
-
-```sh
-git status
-```
-
-Notice that a.out is no longer listed, only the `.cpp` `.hpp`, `CMakeLists.txt` and the new `.gitignore` files are listed as untracked. Now, we can add all of these files to our project with the following commands:
+We don’t want Git to continue to tell us that `area_calculator` is untracked, but luckily Git has a solution for this problem. You can create a file called `.gitignore` that will contain a list of all of the files that you want Git to ignore when it tells you what is/isn’t tracked and modified. Create a file named `.gitignore` and add `area_calculator` to it. Now run `git status` again and take a look at the output. Notice that `area_calculator` is no longer listed, only the `.cpp` `.hpp`, `CMakeLists.txt` and the new `.gitignore` files are listed as untracked. Now, we can add all of these files to our project with the following commands:
 
 ```sh
 git add header/rectangle.hpp
 git add src/rectangle.cpp
 git add src/main.cpp
+git add src/new_main.cpp
 git add .gitignore
 ```
 
-> Note: Do not add executable or object files to your git repo, only add source files. Tracking executables uses LOTS of disk space and they are unlikely to work on other peoples machines. **If we see these files in your Git repos, your grade on the assignment will be docked 20%**. You should use a `.gitignore` file so that they don’t appear in your Git status or accidentally get added to your repository.
+> Note: Do not add executables, object files, or temporary files which are re-generated during compilation to your git repo, only add source files and other necessary files for your submission (these are listed in the assignment specifications). Tracking executables uses LOTS of disk space and they are unlikely to work on other peoples machines. **If we see these files in your Git repos, your grade on the assignment will be docked 20%**. You should use a `.gitignore` file so that they don’t appear in your Git status or accidentally get added to your repository.
 
 Now, when we run Git status, there is a section labeled "Changes to be committed" with the files that were just added underneath it. This means that Git now thinks these files are part of the project, and will begin to track changes to it.
 
 Whenever we finish a task in our repo, we "commit" our changes. This tells Git to save the current state of the repo, made up of all the files we’ve added, so that we can come back to it later if we need to. Commit your changes using the command:
 
 ```sh
-git commit -m "my first commit”
+git commit -m "Add initial files”
 ```
 
-Every commit needs a "commit message" that describes what changes we made in the repo. Writing clear, succinct, informative commit messages is one of the keys to using Git effectively. In this case we passed the -m flag to Git so the commit message was specified in the command line. If we did not pass a flag, then Git would have opened the Vim editor for us to type a longer commit message.
+Every commit needs a "commit message" that describes what changes we made in the repo. Writing clear, succinct, informative commit messages is one of the keys to using Git effectively. In this case we passed the `-m` flag to Git so we could write the commit message in the command line. If we did not pass a flag, then Git would have opened the Vim editor for us to type a longer commit message which is useful when you are commiting more major changes which require more explination.
 
 That was not a very informative commit message, so lets edit it to be something more informative. Anytime you need to modify the last commit that you made, you need to amend it, which is done through the following command:
 
@@ -465,11 +454,14 @@ int main()
 {
 	Rectangle rect1, rect2;
 	rect1.set_width(3);
-    	rect1.set_height(4);
+    rect1.set_height(4);
+
 	rect2.set_width(4);
-    	rect2.set_height(2);
+    rect2.set_height(2);
+
 	cout << "Rectangle 1 area: " << rect1.area() << endl;
 	cout << "Rectangle 2 area: " << rect2.area() << endl;
+
 	return 0;
 }
 ```
@@ -499,7 +491,7 @@ $ git commit -m "Add one more rectangle and compute its area”
 
 ### Git Push & Pull
 
-While git is a VCS, GitHub is a remote repository, which is an important distinction for two reasons. The first is that up until now all the work you’ve done has only been saved locally, so if there is a problem with your computer you would have no backup and therefore no way to recover the files. The second is that because all the changes are local, there is no way for people collaborating with you to see your changes or merge them into their own branches (merging and branching will be discussed in a future lab). Go to your GitHub repository for this lab, and you should see that none of the work you've done is listed.
+While git is a version control system (VCS), GitHub is a remote repository which is an important distinction for two reasons. The first is that up until now all the work you’ve done has only been saved locally, so if there is a problem with your computer you would have no backup and therefore no way to recover the files. The second is that because all the changes are local, there is no way for people collaborating with you to see or receive your changes. Go to your GitHub repository for this lab, and you should see that none of the work you've done is listed.
 
 Since we cloned the remote repository from GitHub directly, our local repository is already associated with a remote repository (usually referred to as “remote” or “upstream”). In order to send the changes we’ve made locally to GitHub, we just need to “push” them up to the server (do this now).
 
@@ -507,20 +499,8 @@ Since we cloned the remote repository from GitHub directly, our local repository
 $ git push
 ```
 
-This will push all the commits you've made since your most recent push. If there haven’t been any other changes to the remote GitHub version, then this will simply send the commits to the repo. However, if there have been changes to the branch (perhaps because someone else has also been working on that same branch or changes have been merged into master), then you will first need to “pull” the remote changes, merge them with your work, and then push the merged version to GitHub:
-
-```sh
-$ git pull
-```
-
-It is also possible to receive the remote changes (also known as upstream changes) without having Git automatically attempt to merge them into your branch. For this you would use the following command:
-
-```sh
-$ git fetch
-```
-
-After this, you can do a Git merge to integrate the remote changes. `git pull` essentially runs a `git fetch` and a `git merge` together in one step. You will be using `git push` and `git pull` extensively in your projects for this course, and merge conflicts will likely occur fairly regularly.
+This will push all the commits you've made since your last push assuming there haven't been any changes to the remote GitHub repo that your local Git doesn't know about. If there have been you will need to "pull" and "merge" those changes into your local repository, but we will cover those steps in a future lab when we cover Git and GitHub in more depth.
 
 ## Submission
 
-None of the labs or assignments for this course require direct submissions. Everything will be graded based on your GitHub repositories. Labs will be graded based on the last commit to the repository, while projects will be graded based on specific tags (tags will be explained in a future lab).
+None of the labs or assignments for this course require direct submissions but will be graded based on your GitHub repositories. Projects will be graded based on specific tags (we will explain tags in a future lab) and labs will be graded based on your last GitHub commit and a demonstration of your code to your TA. Since you have just pushed your code to GitHub you now need to demonstrate that you have completed the lab to the TA.
