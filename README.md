@@ -1,6 +1,6 @@
 # Intro to Linux
 
-> Author(s): Andrew Lvovsky (@borninla) and Brian Crites (@brrcrites)
+> Author(s): Andrew Lvovsky ([@borninla](https://github.com/borninla)) and Brian Crites ([@brrcrites](https://github.com/brrcrites))
 
 Welcome to CS 100! For the first lab of the course, we are introducing the basics needed to get around the Linux environment. There are many reasons Linux is still used in industry today, ranging from its open-source nature to its excellent stability. There are various versions of Unix/Linux, known as distributions, which are built from a relatively small number of base kernels. In this course, we will be logging into and using a server provided by the university named `hammer`. In addition to learning Linux basics we will also (re-)introducing g++, CMake, Git and GitHub in this lab.
 
@@ -56,7 +56,7 @@ Now that we've demonstrated how to create and traverse directories, let's go ahe
 rm -rf example_dir
 ```
 
-`rm` is the command used to "remove" files or directories. Normally, if you have a file, you can just enter `rm <filename>`. Since we are dealing with a directory, we need to add the extra `-rf` option flags. `r` recursively removes files and directories relative to the directory you are removing, while 'f' ignores nonexistent files and doesn't prompt the user to delete every file within the directory that needs to be deleted. That said, with great power comes great responsibility. Use `rm -rf` only when needed. The last thing you want is to accidently delete important files or directories.
+`rm` is the command used to "remove" files or directories. If you have a regular file you can enter `rm <filename>` without any flags. However, since we are dealing with a directory we need to add the extra `-rf` options. `r` recursively removes files and directories within the directory you are removing and 'f' ignores nonexistent files and doesn't prompt the user to confirm each deletion. That said, with great power comes great responsibility. Use `rm -rf` only when necessary. The last thing you want is to accidently delete important files or directories.
 
 ## The `bashrc` File
 
@@ -108,9 +108,9 @@ For students with Linux and macOS machines: try making an alias in your local ma
 alias hammer="ssh <your_CS_username>@hammer.cs.ucr.edu"
 ```
 
-## Using `g++` for Compilation
+## Command Line Compilation
 
-Using `g++` invokes GNU's C++ compiler. To demonstrate how it works, go ahead and write a simple `hello world!` program using the command line editor of your choice (save the file as `main.cpp`):
+GCC is the GNU project C Compiler and is one of the most used compilers for C code (macOS previously used GCC but not uses another compiler called Clang). It typically also comes with G++ which is a similar compiler for C++ code. The `g++` command invokes this compiler from the command line. To demonstrate how it works, go ahead and write a simple `hello world!` program using the command line editor of your choice (save the file as `main.cpp`):
 
 ```
 #include <iostream>
@@ -124,62 +124,68 @@ int main()
 }
 ```
 
-Once written, make sure to save and quit out of your editor. Then, type the following command:
+Once finished make sure to save and quit out of your editor and then type the following command in the terminal:
 
 ```
 g++ -std=c++11 main.cpp
 ```
 
-If successful, there shouldn't be any output. A quick `ls` will show that a new file named `a.out` was generated. This is the executable target file of your program. To run it, type `./a.out` and press Enter. You should now see `hello world!` as output.
+If successful you shouldn't see any output (if not successful, fix your errors until you are able to compile your program). A quick `ls` will show that a new file named `a.out` was generated which is the executable generated from your program. You execute this executable (also known as a binary) with `./a.out`. Note that the `.` in this case is the current directory and is required [primarily for security reasons](https://stackoverflow.com/questions/6331075/why-do-you-need-dot-slash-before-executable-or-script-name-to-run-it-in-bas). When you execute your program you should see "hello world!" printed out to the terminal.
 
-> Note: The above command will work by just typing `g++ main.cpp`. The flag `-std=c++11` is added to tell the compiler to use an updated standard of C++. Please use that flag when compiling programs within this course.
+> Note: The above command will work without the `-std=c++11` flag. By default g++ will compile to the C++98 standard which does not have a number of features we will need in this course. You will need to use this flag to enable the C++11 standard which we will use in this course.
 
-Most of the time, you would want to give your program a recognizable name. To do that, we can use the `-o` flag to name our executable target file. Go ahead and type `rm a.out` to delete the executable. Then, type the following command:
-
-```
-g++ -std=c++11 -o my_program main.cpp
-```
-
-You have now created an executable called `my_program`. You can run it by typing `./my_program`.
-
-When developing larger programs in object-oriented languages, it is common to break up work into multiple source and header files (in C++'s case, `.cpp` and `.h` files respectively). We will now show how `g++` can be used to compile multiple files into a single executable.
-
-We will creating a simple Rectangle class to show this. Go ahead and make a header file called `rectangle.h`, and add the following code:
+Most of the time you want to give your program a recognizable name. Adding the `-o` "output" flag followed by a name and the executable will output with that name. Go ahead and run `rm a.out` to delete the old executable then run the following command:
 
 ```
+g++ -std=c++11 -o hello_world main.cpp
+```
+
+You have now created an executable called `hello_world` and can execute it by typing `./hello_world`.
+
+When developing larger programs in object-oriented languages like you will in this class it is common to break up work into multiple source and header files (in C++'s case, `.cpp` and `.hpp` files respectively). The g++ compiler allows you to compile multiple files into a single executable.
+
+Before we write our files lets create some directories to seperate our files and make things easier to find. Create a `src` direcector and a `header` directory where we will put the respective source and header files. We will creating a simple Rectangle class which has a height and width and calculates the rectangles area. Go ahead and make a header file called `rectangle.h` in the `header` directory, and add the following code:
+
+```c++
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
 class Rectangle {
-	public:
-		void set_values(int w, int h);
-		int area();
 	private:
-		int _width;
-		int _height;
+		int width;
+		int height;
+	public:
+        void set_width(int w);
+        void set_height(int h);
+		int area();
 };
 
 #endif /* RECTANGLE_H */
 ```
 
-Save and quit. Now, create a class (source) file called `rectangle.cpp`, and add the following code:
+> The `#ifndef`, `#define`, and `#endif` are known as [sharp guards or include guards](https://www.cprogramming.com/tutorial/cpreprocessor.html) and cause the compiler to only include this file once even when its referenced multiple times. It is a good idea to add these to the top of all your header files and we will cover them more in a future lab.
 
-```
+Also create a source file called `rectangle.cpp` in the `src` directory, and add the following code:
+
+```c++
 #include "rectangle.h"
 
-void Rectangle::set_values(int w, int h) {
-	_width = w;
-	_height = h;
+void Rectangle::set_width(int w) {
+	this->width = w;
+}
+
+void Rectangle::set_height(int h) {
+    this->height = h;
 }
 
 int Rectangle::area() {
-	return _width * _height;
+	return this->width * this->height;
 }
 ```
 
-Save and quit. Finally, overwrite your current `main.cpp` with following code:
+Finally, overwrite your current `main.cpp` with following code:
 
-```
+```c++
 #include <iostream>
 #include "rectangle.h"
 
@@ -188,19 +194,22 @@ using namespace std;
 int main()
 {
 	Rectangle rect;
-	rect.set_values(3,4);
-	cout << "area: " << rect.area() << endl;
+	rect.set_width(3);
+    rect.set_height(4);
+	cout << "Rectangle area: " << rect.area() << endl;
 	return 0;
 }
 ```
 
-We are now ready to compile and run! Go ahead and run the following command:
+The `main.cpp` file was not created in the `src` directory so we should move it there. You can use the command `mv <source> <destination>` to move a file from `<source>` to `<destination>` where the `<source>` is a file and the `<destination>` is a file or folder. From your home directory where `main.cpp` should be use `mv main.cpp src/` to move `main.cpp` into the `src` directory. If you added a filename after `src/` in the destination part of the move command it would also rename the file and if its omitted it will use the source files name (which is fine in this case). The `mv` move command is used for both moving files and renaming them. 
+
+We are now ready to compile and run! Go ahead and run the following command (notice that the g++ command can take relative paths, so the below command is being run from your home directory):
 
 ```
-g++ -std=c++11 -o my_cooler_program main.cpp rectangle.cpp
+g++ -std=c++11 -o area_calculator src/main.cpp src/rectangle.cpp
 ```
 
-Notice that we didn't include the header file `rectangle.h` as an argument. That is where the `#include "rectangle.h"` within `rectangle.cpp` comes in handy; it tells the compiler to include the header for us. Nice! Go ahead and run `./my_cooler_program`. You should see `area: 12` as output.
+Notice that we didn't include the header file `rectangle.h` as an argument. The `#include "rectangle.h"` within `rectangle.cpp` tells the compiler to include the header for us (and is why the include guards are necessary). Nice! Go ahead and run `./area_calculator`. You should see `Rectangle area: 12` as output.
 
 ### Extra Stuff
 
