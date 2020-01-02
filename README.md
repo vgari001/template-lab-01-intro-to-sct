@@ -130,13 +130,13 @@ Once finished make sure to save and quit out of your editor and then type the fo
 g++ -std=c++11 main.cpp
 ```
 
-> Note: Most shells support autocompletion when typing out commands, and is useful when you have a command with many arguments to type out. For example, start typing `g++ -std=c++11 ma`. After typing `a`, press the Tab key. Bash (the shell you are using in `hammer`) should autocomplete to `main.cpp`.
+> Note: Most shells support autocompletion when typing out commands, and is useful when you have a command with many arguments to type out. For example, start typing `g++ -std=c++11 ma`. After typing `a`, press the Tab key. Bash (the shell you are currently using in `hammer`) should autocomplete to `main.cpp`.
 
-If successful you shouldn't see any output (if not successful, fix your errors until you are able to compile your program). A quick `ls` will show that a new file named `a.out` was generated which is the executable generated from your program. You execute this executable (also known as a binary) with `./a.out`. Note that the `.` in this case is the current directory and is required [primarily for security reasons](https://stackoverflow.com/questions/6331075/why-do-you-need-dot-slash-before-executable-or-script-name-to-run-it-in-bas). When you execute your program you should see "hello world!" printed out to the terminal.
+If successful, you shouldn't see any output (if not successful, fix your errors until you are able to compile your program). A quick `ls` will show that a new file named `a.out` was generated, which is the executable generated from your program. You execute this executable (also known as a binary) with `./a.out`. Note that the `.` in this case is the current directory and is required [primarily for security reasons](https://stackoverflow.com/questions/6331075/why-do-you-need-dot-slash-before-executable-or-script-name-to-run-it-in-bas). When you execute your program you should see "hello world!" printed out to the terminal.
 
 > Note: The above command will work without the `-std=c++11` flag. By default g++ will compile to the C++98 standard which does not have a number of features we will need in this course. You will need to use this flag to enable the C++11 standard which we will use in this course.
 
-Most of the time you want to give your program a recognizable name. Adding the `-o` "output" flag followed by a name and the executable will output with that name. Go ahead and run `rm a.out` to delete the old executable then run the following command:
+Most of the time you want to give your program a recognizable name. Adding the `-o` "output" flag followed by a name and the executable will output with that name. Go ahead and run `rm a.out` to delete the old executable, then run the following command:
 
 ```sh
 g++ -std=c++11 -o hello_world main.cpp
@@ -144,40 +144,40 @@ g++ -std=c++11 -o hello_world main.cpp
 
 You have now created an executable called `hello_world` and can execute it by typing `./hello_world`.
 
-When developing larger programs in object-oriented languages like you will in this class it is common to break up work into multiple source and header files (in C++'s case, `.cpp` and `.hpp` files respectively). The g++ compiler allows you to compile multiple files into a single executable.
+When developing larger programs in object-oriented languages (like you will in this class), it is common to break up work into multiple source and header files (in C++'s case, `.cpp` and `.hpp` files respectively). The g++ compiler allows you to compile multiple files into a single executable.
 
-Before we write our files lets create some directories to seperate our files and make things easier to find. Create a `src` direcector and a `header` directory where we will put the respective source and header files. We will creating a simple Rectangle class which has a height and width and calculates the rectangles area. Go ahead and make a header file called `rectangle.h` in the `header` directory, and add the following code:
+Before we write our files, lets create some directories to seperate our files and make things easier to find. Create a `src` directory and a `header` directory where we will put the respective source and header files. We will be creating a simple Rectangle class which has a height and width and calculates the rectangle's area. Go ahead and make a header file called `rectangle.hpp` in the `header` directory, and add the following code:
 
 ```c++
-#ifndef RECTANGLE_H
-#define RECTANGLE_H
+#ifndef RECTANGLE_HPP
+#define RECTANGLE_HPP
 
 class Rectangle {
 	private:
 		int width;
 		int height;
 	public:
-        void set_width(int w);
-        void set_height(int h);
+        	void set_width(int w);
+        	void set_height(int h);
 		int area();
 };
 
-#endif /* RECTANGLE_H */
+#endif /* RECTANGLE_HPP */
 ```
 
-> The `#ifndef`, `#define`, and `#endif` are known as [sharp guards or include guards](https://www.cprogramming.com/tutorial/cpreprocessor.html) and cause the compiler to only include this file once even when its referenced multiple times. It is a good idea to add these to the top of all your header files and we will cover them more in a future lab.
+> The `#ifndef`, `#define`, and `#endif` are known as [sharp guards or include guards](https://www.cprogramming.com/tutorial/cpreprocessor.html) and cause the compiler to only include this file once even when its referenced multiple times. It is a good idea to add these to the top of all your header files, and we will cover them more in a future lab.
 
 Also create a source file called `rectangle.cpp` in the `src` directory, and add the following code:
 
 ```c++
-#include "rectangle.h"
+#include "rectangle.hpp"
 
 void Rectangle::set_width(int w) {
 	this->width = w;
 }
 
 void Rectangle::set_height(int h) {
-    this->height = h;
+    	this->height = h;
 }
 
 int Rectangle::area() {
@@ -189,7 +189,7 @@ Finally, overwrite your current `main.cpp` with following code:
 
 ```c++
 #include <iostream>
-#include "rectangle.h"
+#include "rectangle.hpp"
 
 using namespace std;
 
@@ -197,23 +197,25 @@ int main()
 {
 	Rectangle rect;
 	rect.set_width(3);
-    rect.set_height(4);
+    	rect.set_height(4);
 	cout << "Rectangle area: " << rect.area() << endl;
 	return 0;
 }
 ```
 
-The `main.cpp` file was not created in the `src` directory so we should move it there. You can use the command `mv <source> <destination>` to move a file from `<source>` to `<destination>` where the `<source>` is a file and the `<destination>` is a file or folder. From your home directory where `main.cpp` should be use `mv main.cpp src/` to move `main.cpp` into the `src` directory. If you added a filename after `src/` in the destination part of the move command it would also rename the file and if its omitted it will use the source files name (which is fine in this case). The `mv` move command is used for both moving files and renaming them. 
+The `main.cpp` file was not created in the `src` directory so we should move it there. You can use the command `mv <source> <destination>` to move a file from `<source>` to `<destination>` where the `<source>` is a file and the `<destination>` is a file or folder. From your home directory where `main.cpp` should be use `mv main.cpp src/` to move `main.cpp` into the `src` directory. If you added a filename after `src/` in the destination part of the move command, it would also rename the file. If its omitted, it will use the source files name (which is fine in this case). The `mv` move command is used for both moving files and renaming them. 
 
-We are now ready to compile and run! Go ahead and run the following command (notice that the g++ command can take relative paths, so the below command is being run from your home directory):
+We are now ready to compile and run! Go ahead and run the following command (notice that the `g++` command can take relative paths, so the command below is being run from your home directory):
 
 ```sh
 g++ -std=c++11 -o area_calculator src/main.cpp src/rectangle.cpp
 ```
 
-Notice that we didn't include the header file `rectangle.h` as an argument. The `#include "rectangle.h"` within `rectangle.cpp` tells the compiler to include the header for us (and is why the include guards are necessary). Nice! Go ahead and run `./area_calculator`. You should see `Rectangle area: 12` as output.
+Notice that we didn't include the header file `rectangle.hpp` as an argument. The `#include "rectangle.hpp"` within `rectangle.cpp` tells the compiler to include the header for us (and is why the include guards are necessary). Nice! Go ahead and run `./area_calculator`. You should see `Rectangle area: 12` as output.
 
-Now we introduce Make, GNU's build automation tool. It automatically builds executables from source code by reading a file called the `Makefile` which tells Make how to build the target program. The `Makefile` is made up of rules, that look like the following:
+### Make
+
+Now we briefly introduce Make, GNU's build automation tool. It automatically builds executables from source code by reading a file called the `Makefile` which tells Make how to build the target program. The `Makefile` is made up of rules, that look like the following:
 
 ```make
 target:	dependencies ...
@@ -224,41 +226,41 @@ target:	dependencies ...
 Let's go ahead and create a `Makefile` for our program above. Add the following rule into the `Makefile`:
 
 ```make
-hello_world: src/main.cpp src/rectangle.cpp
-	g++ -o my_cooler_program src/main.cpp src/rectangle.cpp
+area_calculator: src/main.cpp src/rectangle.cpp
+	g++ -o area_calculator src/main.cpp src/rectangle.cpp
 ```
 
-Save and quit. Now, go ahead and run `make`. You should see the rule's command displayed as output. By this point, you hopefully see the potential in using `make`; you don't need to keep entering `g++ -o my_cooler_program main.cpp rectangle.cpp` over and over again when making edits to the source files.
+Save and quit. Now, go ahead and run `make`. You should see the rule's command displayed as output. By this point, you hopefully see the potential in using `make`; you don't need to keep entering `g++ -o area_calculator main.cpp rectangle.cpp` over and over again when making edits to the source files.
 
-## CMake
+### CMake
 
 [CMake](https://cmake.org/) is a build system built on top of GNU's `make` and supports some more advanced features. The CMake system looks for a CMakeLists.txt file in order to know what to build, so start by creating the following CMakeLists.txt file:
 
 ```cmake
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-ADD_EXECUTABLE(my_cooler_program
+ADD_EXECUTABLE(area_calculator
     main.cpp
     rectangle.cpp
 )
 ```
 
-The first function, `CMAKE_MINIMUM_REQUIRED`, sets the minimum version of CMake that can be used to compile this program. The function `ADD_EXECUTABLE` tells CMake to create a new exectuable named after the first parameter in that function, in this case `my_cooler_program`. We then list all the `.cpp` files which need to be included in that executable. Earlier, we mentioned that CMake is built on top of `make`. To be more specific, it generates really good Makefiles. Run the following command from the terminal in order to generate a new make file to compile your program:
+The first function, `CMAKE_MINIMUM_REQUIRED`, sets the minimum version of CMake that can be used to compile this program. The function `ADD_EXECUTABLE` tells CMake to create a new exectuable named after the first parameter in that function, in this case `area_calculator`. We then list all the `.cpp` files which need to be included in that executable. Earlier, we mentioned that CMake is built on top of `make`. To be more specific, it generates really good Makefiles. Run the following command from the terminal in order to generate a new make file to compile your program:
 
 ```sh
 $ cmake3 .
 ```
 
-This command envokes the CMake build system in the local directory (where our CMakeLists.txt file is located). **Make sure you use the `cmake3` command and not just `cmake`**. Hammer has two version of CMake installed, and if you do not use the `cmake3` command you will get an error (note that you will likely just use the `cmake` command when you develop on your local environment, since you will only have one version of CMake installed). You should now have an updated `Makefile` that matches the executable that we asked for in our CMakeLists.txt. Go ahead and envoke the `Makefile` (type `make`). You should see a nicely designed build percentage which will generate a new `my_cooler_program` executable.
+This command envokes the CMake build system in the local directory (where our CMakeLists.txt file is located). **Make sure you use the `cmake3` command and not just `cmake`**. Hammer has two version of CMake installed, and if you do not use the `cmake3` command you will get an error (note that you will likely just use the `cmake` command when you develop on your local environment, since you will only have one version of CMake installed). You should now have an updated `Makefile` that matches the executable that we asked for in our CMakeLists.txt. Go ahead and envoke the `Makefile` (type `make`). You should see a nicely designed build percentage which will generate a new `area_calculator` executable.
 
 ```sh
 $ make
-Scanning dependencies of target my_cooler_program
-[ 33%] Building CXX object CMakeFiles/my_cooler_program.dir/main.cpp.o
-[ 66%] Building CXX object CMakeFiles/my_cooler_program.dir/rectangle.cpp.o
-[100%] Linking CXX executable my_cooler_program
-[100%] Built target my_cooler_program
-``
+Scanning dependencies of target area_calculator
+[ 33%] Building CXX object CMakeFiles/area_calculator.dir/main.cpp.o
+[ 66%] Building CXX object CMakeFiles/area_calculator.dir/rectangle.cpp.o
+[100%] Linking CXX executable area_calculator
+[100%] Built target area_calculator
+```
 
 ### Extra Stuff
 
