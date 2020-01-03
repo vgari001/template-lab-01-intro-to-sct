@@ -1,4 +1,4 @@
-# Intro to Linux
+# Intro to Software Construction Tooling
 
 > Author(s): Andrew Lvovsky ([@borninla](https://github.com/borninla)) and Brian Crites ([@brrcrites](https://github.com/brrcrites))
 
@@ -344,13 +344,13 @@ Copy the link in the box below, this is the GitHub repository url which you will
 git clone <github-url>
 ```
 
-Make sure to replace the above `<github-url>` with the url that you copied from the “Clone or download” box. This will create a new folder named `lab-01-linux-intro-...` with some additional text based on your username/groupname. This new directory is a copy of the GitHub repository, and is already initialized as a Git project. Move into this new directory and we can begin modifying it.
+Make sure to replace the above `<github-url>` with the url that you copied from the “Clone or download” box. This will create a new folder named `lab-01-intro-to-sct-...` with some additional text based on your username/groupname. This new directory is a copy of the GitHub repository, and is already initialized as a Git project. Move into this new directory and we can begin modifying it.
 
 > Note: README.md files are special in GitHub repositories. The contents of the README.md file in the repository's root will actually be rendered along with a list of files for anyone who visits the repository. The hash (#) at the beginning of the line is part of GitHub Markdown which specifies that this line should be a title. [You can read more about GitHub Markdown here](https://guides.github.com/features/mastering-markdown/).
 
 ### Git Status, Add & Commit
 
-Remember our program and its source/header files from earlier? Go ahead and move all of those files into the new `lab-01-linux-intro-...` folder.
+Remember our program and its source/header files from earlier? Go ahead and move all of those files into the new `lab-01-intro-to-sct-...` folder.
 
 Git doesn’t automatically keep track of new files for us. Instead, we have to tell Git to start tracking these new files. Run the following command:
 
