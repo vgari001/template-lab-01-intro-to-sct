@@ -217,7 +217,7 @@ Notice that we didn't include the header file `rectangle.hpp` as an argument. Th
 
 ### Make
 
-Now we briefly introduce Make which is a GNU project build automation tool. Make is essentially a scripting language for building executables from source code. It works by reading a `Makefile` (that is the required file name) which is a text file that tells Make how to build the target program. The `Makefile` is made up of rules, that look like the following:
+Now we briefly introduce Make, which is a GNU project build automation tool. Make is essentially a scripting language for building executables from source code. It works by reading a `Makefile` (that is the required file name) which is a text file that tells Make how to build the target program. The `Makefile` is made up of rules that look like the following:
 
 ```make
 target: dependencies ...
@@ -232,7 +232,7 @@ area_calculator: src/main.cpp src/rectangle.cpp
     g++ -o area_calculator src/main.cpp src/rectangle.cpp
 ```
 
-Now go ahead and run `make` in your terminal and you should see the rule's command displayed as output. Using `make` allows you to save lots of time typing out compilations commands so you don't need to keep entering `g++ -o area_calculator main.cpp rectangle.cpp` over and over again when making edits to the source files. It also allows you to create multiple executables from a single command. However, we won't be using make directly in this course but instead a more powerful system.
+Now go ahead and run `make` in your terminal and you should see the rule's command displayed as output. Using `make` allows you to save lots of time typing out compilations commands so you don't need to keep entering `g++ -o area_calculator main.cpp rectangle.cpp` over and over again when making edits to the source files. It also allows you to create multiple executables from a single command. However, we won't be using Make directly in this course but instead a more powerful system.
 
 ### CMake
 
@@ -247,13 +247,17 @@ ADD_EXECUTABLE(area_calculator
 )
 ```
 
-The first function, `CMAKE_MINIMUM_REQUIRED`, sets the minimum version of CMake that can be used to compile this program. The function `ADD_EXECUTABLE` tells CMake to create a new exectuable named after the first parameter in that function, in this case `area_calculator`. We then list all the `.cpp` files which need to be included in that executable. Earlier, we mentioned that CMake is built on top of `make`. To be more specific, it generates really good Makefiles. Run the following command from the terminal in order to generate a new make file to compile your program:
+The first function, `CMAKE_MINIMUM_REQUIRED`, sets the minimum version of CMake that can be used to compile this program. The function `ADD_EXECUTABLE` tells CMake to create a new executable named after the first parameter in that function, in this case `area_calculator`. We then list all the `.cpp` files which need to be included in that executable. Earlier, we mentioned that CMake is built on top of `make`. To be more specific, it generates really good Makefiles. Run the following command from the terminal in order to generate a new Makefile to compile your program:
 
 ```sh
 $ cmake3 .
 ```
 
-This command envokes the CMake build system in the local directory (where our CMakeLists.txt file is located). **Make sure you use the `cmake3` command and not just `cmake`**. Hammer has two version of CMake installed because of the tool sourcing we did at the beginning of the lab, and if you do not use the `cmake3` command you will get an error. If you are developing on your own machine will likely just use the `cmake` command, since you will only have one version of CMake installed. CMake should now have generated a new `Makefile` so execute the `Makefile` with the `make` command. You should see a nicely designed build percentage which will generate a new `area_calculator` executable.
+This command envokes the CMake build system in the local directory (where our CMakeLists.txt file is located). 
+
+> Note: **Make sure you use the `cmake3` command and not just `cmake`**. Hammer has two versions of CMake installed because of the tool sourcing we did at the beginning of the lab, and if you do not use the `cmake3` command you will get an error. If you are developing on your own machine, you will likely just use the `cmake` command since you will only have one version of CMake installed. 
+
+CMake should now have generated a new `Makefile`, so execute the `Makefile` with the `make` command. You should see a nicely-designed build percentage which will generate a new `area_calculator` executable.
 
 ```sh
 $ make
@@ -297,7 +301,7 @@ Now if you run `cmake3 .` and `make` you will see two executables generated `are
 
 ### Git Config
 
-Git is a local program for performing version control which is usually paired with a remote git server for saving code off site. GitHub is a web-based Git repository which your local Git program is capable of interfacing with. Git and GitHub are therefore two seperate systems and Git needs to be configured correctly in order for your code changes to be tracked and attributed correctly on GitHub. You should run the following commands on any new system you are committing from before you start working (these can be run from any directory and only have to be run once per system):
+Git is a local program for performing version control which is usually paired with a remote Git server for saving code off site. GitHub is a web-based Git repository which your local Git program is capable of interfacing with. Git and GitHub are therefore two seperate systems and Git needs to be configured correctly in order for your code changes to be tracked and attributed correctly on GitHub. You should run the following commands on any new system you are committing from before you start working (these can be run from any directory and only have to be run once per system):
 
 ```sh
 git config --global user.name "<github-username>"
@@ -308,7 +312,7 @@ GitHub will use the email that you configure with your Git client to track which
 
 ### Git Init & Clone
 
-New Git repositories can be created either locally using the git client or through GitHub directly. Make sure you are back at your home directory (`cd ~`) and run the following commands on the terminal in `hammer`:
+New Git repositories can be created either locally using the Git client or through GitHub directly. Make sure you are back at your home directory (`cd ~`) and run the following commands on the terminal in `hammer`:
 
 ```sh
 mkdir lab-01
@@ -323,7 +327,7 @@ git init
 
 This will create a hidden `.git` repository (which you can see with `ls -a`) that holds all the information that Git uses to keep track of your files and changes. The folder is hidden because it begins with a period (recall earlier in the lab) and is typically not modified by users directly.
 
-However, you use a different method if you want to receive a copy of an already existing repository, which you will do for all of the labs and assignments in this course. Rather than initializing a new repository, you will make a “clone” of a repository that already exists. Start by moving out of the git project you just created and removing that directory:
+However, you use a different method if you want to receive a copy of an already existing repository, which you will do for all of the labs and assignments in this course. Rather than initializing a new repository, you will make a “clone” of a repository that already exists. Start by moving out of the Git project you just created and removing that directory:
 
 ```sh
 cd ..
@@ -340,7 +344,7 @@ Copy the link in the box below, this is the GitHub repository url which you will
 git clone <github-url>
 ```
 
-Replacing the above `<github-url>` with the url that you copied from the “Clone or download” box. This will create a new folder named `lab-01-linux-intro-...` with some additional text based on your username/groupname. This new directory is a copy of the GitHub repository, and is already initialized as a Git project. Move into this new directory and we can begin modifying it.
+Make sure to replace the above `<github-url>` with the url that you copied from the “Clone or download” box. This will create a new folder named `lab-01-linux-intro-...` with some additional text based on your username/groupname. This new directory is a copy of the GitHub repository, and is already initialized as a Git project. Move into this new directory and we can begin modifying it.
 
 > Note: README.md files are special in GitHub repositories. The contents of the README.md file in the repository's root will actually be rendered along with a list of files for anyone who visits the repository. The hash (#) at the beginning of the line is part of GitHub Markdown which specifies that this line should be a title. [You can read more about GitHub Markdown here](https://guides.github.com/features/mastering-markdown/).
 
@@ -354,7 +358,7 @@ Git doesn’t automatically keep track of new files for us. Instead, we have to 
 git status
 ```
 
-The `status` command lists the current status of your Git repository, mostly showing whcih files have changes. In the output, there is a section labeled "untracked files." Notice the files in that section. This means that Git knows these files exist, but isn’t currently keeping track of changes to them. We want to keep track of all the `.cpp` `.hpp` files and `CMakeLists.txt`, but not the `area_calculator` file since that should be recompiled to run correctly on different machines. It is important to note that Git does not automatically save changes to your files either locally or on GitHub. When you have made a set of changes that you want to save you will have to use the comands we are going to introduce below so you will use these commands very often.
+The `status` command lists the current status of your Git repository, mostly showing whcih files have changes. In the output, there is a section labeled "untracked files." Notice the files in that section. This means that Git knows these files exist, but isn’t currently keeping track of changes to them. We want to keep track of all the `.cpp` `.hpp` files and `CMakeLists.txt`, but not the `area_calculator` file since that should be recompiled to run correctly on different machines. It is important to note that Git does not automatically save changes to your files either locally or on GitHub. When you have made a set of changes that you want to save, you will have to use the commands we are going to introduce below so you will use these commands very often.
 
 We don’t want Git to continue to tell us that `area_calculator` is untracked, but luckily Git has a solution for this problem. You can create a file called `.gitignore` that will contain a list of all of the files that you want Git to ignore when it tells you what is/isn’t tracked and modified. Create a file named `.gitignore` and add `area_calculator` to it. Now run `git status` again and take a look at the output. Notice that `area_calculator` is no longer listed, only the `.cpp` `.hpp`, `CMakeLists.txt` and the new `.gitignore` files are listed as untracked. Now, we can add all of these files to our project with the following commands:
 
@@ -376,7 +380,7 @@ Whenever we finish a task in our repo, we "commit" our changes. This tells Git t
 git commit -m "Add initial files”
 ```
 
-Every commit needs a "commit message" that describes what changes we made in the repo. Writing clear, succinct, informative commit messages is one of the keys to using Git effectively. In this case we passed the `-m` flag to Git so we could write the commit message in the command line. If we did not pass a flag, then Git would have opened the Vim editor for us to type a longer commit message which is useful when you are commiting more major changes which require more explination.
+Every commit needs a "commit message" that describes what changes were made in the repo. Writing clear, succinct, informative commit messages is one of the keys to using Git effectively. In this case we passed the `-m` flag to Git so we could write the commit message in the command line. If we did not pass a flag, then Git would have opened the Vim editor for us to type a longer commit message which is useful when you are commiting more major changes which require more explanation.
 
 That was not a very informative commit message, so lets edit it to be something more informative. Anytime you need to modify the last commit that you made, you need to amend it, which is done through the following command:
 
