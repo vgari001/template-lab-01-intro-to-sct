@@ -30,6 +30,8 @@ The Linux file system is similar to most other file systems. It is helpful to en
 
 When you logged into `hammer`, you should've been placed into your user root directory (also called your home directory). To verify this, please type `pwd`, the command to "print working directory" or the current directory you are in. You should see the path `/home/csmajs/<your_CS_username>` (where `<your_CS_username>` is your CS username from before). If your path is not similar, type `cd ~` where the `~` character is a special character reserved by your terminal to represent your personal home directory. `cd` is the command used to "change directories" and expects a relative or absolute path as an argument (we will explain the difference between paths shortly).
 
+> Note: If you are not a CS major or are an extension student, your path might look something like `/class/classes/<your_CS_username>`. This is fine and will not affect your lab experience. Whenever you see `/home/csmajs/<your_CS_username>` in this lab, just replace it with `/class/classes/<your_CS_username>`.
+
 One important thing to note at this point is that you are working on a server which can, and likely currently does, have multiple users connected to it at the same time. You can type the command `who` to see "who" is currently logged into the server. Each of these users has their own username, directories, processes, and resources on the server. This means that each user has a different `~` home directory that typing `cd ~` will take them to. This is an important concept to remember in order to develop programs which are portable and will work across users, but more on that later.
 
 Go ahead and type the following command:
@@ -360,9 +362,18 @@ git status
 
 The `status` command lists the current status of your Git repository, mostly showing whcih files have changes. In the output, there is a section labeled "untracked files." Notice the files in that section. This means that Git knows these files exist, but isn’t currently keeping track of changes to them. We want to keep track of all the `.cpp` `.hpp` files and `CMakeLists.txt`, but not the `area_calculator` file since that should be recompiled to run correctly on different machines. It is important to note that Git does not automatically save changes to your files either locally or on GitHub. When you have made a set of changes that you want to save, you will have to use the commands we are going to introduce below so you will use these commands very often.
 
-We don’t want Git to continue to tell us that `area_calculator` is untracked, but luckily Git has a solution for this problem. You can create a file called `.gitignore` that will contain a list of all of the files that you want Git to ignore when it tells you what is/isn’t tracked and modified. Create a file named `.gitignore` and add `area_calculator` to it. Now run `git status` again and take a look at the output. Notice that `area_calculator` is no longer listed, only the `.cpp` `.hpp`, `CMakeLists.txt` and the new `.gitignore` files are listed as untracked. Now, we can add all of these files to our project with the following commands:
+We don’t want Git to continue to tell us that `area_calculator` is untracked, but luckily Git has a solution for this problem. You can create a file called `.gitignore` that will contain a list of all of the files and directories that you want Git to ignore when it tells you what is/isn’t tracked and modified. Create a file named `.gitignore` (use Vim to do this by typing `vim .gitignore`). Once Vim opens the file, press the "i" key to enter Insert mode. Type `area_calculator` on the first line. Once done, press the Esc key, then type `:wq` to save and quit.
+
+> Note: Git parses and reads the `.gitignore` file line by line, where each line contains the filename or directory that you don't want Git to track. You can also tell it to ignore files with a specific extension (i.e. writing `*.exe` should ignore all executables with that extension). GitHub has a repo full of different types of `.gitignore`s unique to the programming language of your choice, which you can find [here](https://github.com/github/gitignore).
+
+Now run `git status` again and take a look at the output. Notice that `area_calculator` is no longer listed. The `.cpp` `.hpp`, `CMakeLists.txt` and the new `.gitignore` files are listed as untracked.
+
+> Note: There might be other files listed as untracked, but they are most likely build config files from CMake. You are welcome to add those files to `.gitignore`, making sure to NOT add `CMakeLists.txt` to `.gitignore`, since it is needed to build the Makefile which then builds the executables.
+
+Now, we can add all of these files to our project with the following commands:
 
 ```sh
+git add CMakeLists.txt
 git add header/rectangle.hpp
 git add src/rectangle.cpp
 git add src/main.cpp
